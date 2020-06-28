@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
-const withMDX = require("@next/mdx")();
 
-module.exports = withMDX({
+module.exports = {
   pageExtensions: ["tsx", "ts", "jsx", "js", "mdx"],
-  webpack: (config) => {
+  webpack: (config, options) => {
     config.resolve.alias["@/*"] = path.resolve(__dirname, "./*");
+    config.module.rules.push({
+      test: /\.mdx/,
+      use: [
+        options.defaultLoaders.babel,
+        "@mdx-js/loader",
+        path.join(__dirname, "./lib/fm-loader")
+      ],
+    });
 
     return config;
   },
-});
+};

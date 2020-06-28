@@ -1,7 +1,7 @@
 @import "tailwindcss/base";
 
 h1 {
-  @apply text-3xl;
+  @apply text-3xl font-semibold text-custom-normal;
 }
 h2 {
   @apply text-2xl;
@@ -12,8 +12,14 @@ h3 {
 h4 {
   @apply text-lg;
 }
+h1, h2, h3, h4 {
+  @apply font-semibold text-custom-normal;
+}
 a:hover {
   @apply cursor-pointer underline;
+}
+.app-main a:hover {
+  text-decoration-color: #1e56a0;
 }
 
 @import "tailwindcss/components";

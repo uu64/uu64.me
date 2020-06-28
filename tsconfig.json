@@ -29,7 +29,7 @@
     "**/*.spec.ts"
   ],
   "include": [
-    "next-env.d.ts",
+    "types/*.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ]

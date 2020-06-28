@@ -8,12 +8,10 @@ interface Props {
 const TIndexLayout: React.FC<Props> = (props: Props) => {
   const { children } = props;
   return (
-    <div className="app-content bg-custom-light">
-      <div className="container mx-auto">
-        <OIndexHeader />
-        {children}
-      </div>
-    </div>
+    <>
+      <OIndexHeader />
+      {children}
+    </>
   );
 };
 
