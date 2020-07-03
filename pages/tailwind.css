@@ -1,27 +1,25 @@
 @import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 h1 {
-  @apply text-3xl font-semibold text-custom-normal;
-}
-h2 {
   @apply text-2xl;
 }
-h3 {
+h2 {
   @apply text-xl;
 }
-h4 {
+h3 {
   @apply text-lg;
 }
-h1, h2, h3, h4 {
-  @apply font-semibold text-custom-normal;
+h4 {
+  @apply text-base;
 }
+/* h1, h2, h3, h4 {
+  @apply font-semibold text-custom-normal;
+} */
 a:hover {
   @apply cursor-pointer underline;
 }
-.app-main a:hover {
+/* .app-main a:hover {
   text-decoration-color: #1e56a0;
-}
-
-@import "tailwindcss/components";
-
-@import "tailwindcss/utilities";
+} */

@@ -1,22 +1,23 @@
+import path from "path";
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import dynamic from "next/dynamic";
-import TIndexLayout from "@/components/templates/TIndexLayout";
+import TPostsLayout from "@/components/templates/TPostsLayout";
 import MdxUtil from "@/lib/MdxUtil";
-import path from "path";
 
 interface Props {
   id: string;
+  frontMatter: FrontMatter;
 }
 
 const Post: React.FC<Props> = (props: Props) => {
-  const { id } = props;
+  const { id, frontMatter } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const MDX = dynamic(() => import(`@/posts/${id}.mdx`) as any);
   return (
-    <TIndexLayout>
+    <TPostsLayout frontMatter={frontMatter}>
       <MDX />
-    </TIndexLayout>
+    </TPostsLayout>
   );
 };
 
@@ -29,8 +30,12 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const post = await MdxUtil.getPostById(params.id as string);
   return {
-    props: { id: params.id }
+    props: {
+      id: params.id,
+      frontMatter: post.frontMatter,
+    }
   };
 };
 

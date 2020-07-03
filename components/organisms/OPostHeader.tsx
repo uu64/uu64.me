@@ -1,0 +1,19 @@
+import React from "react";
+
+interface Props {
+  frontMatter: FrontMatter;
+}
+
+const OPostHeader: React.FC<Props> = (props: Props) => {
+  const { frontMatter } = props;
+  return (
+    <div className="border-b-2 my-8">
+      <div>{frontMatter.date}</div>
+      <h1 className="font-semibold text-custom-normal py-2">
+        {frontMatter.title}
+      </h1>
+    </div>
+  );
+};
+
+export default OPostHeader;
