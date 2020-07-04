@@ -2,7 +2,7 @@
 const { colors, fontFamily } = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  // purge: ["./components/**/*.tsx", "./pages/**/*.tsx"],
+  purge: ["./components/**/*.tsx", "./pages/**/*.tsx"],
   theme: {
     colors: {
       ...colors,
