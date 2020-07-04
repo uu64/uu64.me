@@ -28,10 +28,12 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <MDXProvider components={state}>
-      <OPostHeader frontMatter={frontMatter} />
-      {children}
-    </MDXProvider>
+    <div className="blog-post-content px-8">
+      <MDXProvider components={state}>
+        <OPostHeader frontMatter={frontMatter} />
+        {children}
+      </MDXProvider>
+    </div>
   );
 };
 

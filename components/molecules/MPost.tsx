@@ -10,7 +10,7 @@ interface Props {
 const MPost: React.FC<Props> = (props: Props) => {
   const { resourcePath, date, title } = props;
   return (
-    <div className="px-8 py-4">
+    <div className="py-4">
       <p className="py-2 text-gray-600">{date}</p>
       <ANextLink href="/[...id]" as={resourcePath}>
         <a className="font-semibold text-custom-normal">
