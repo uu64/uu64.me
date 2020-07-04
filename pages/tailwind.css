@@ -1,6 +1,6 @@
+/* purgecss start ignore */
 @import "tailwindcss/base";
 @import "tailwindcss/components";
-@import "tailwindcss/utilities";
 
 @media (min-width: 640px) {
   html {
@@ -28,3 +28,6 @@ h4 {
 a:hover {
   @apply cursor-pointer underline;
 }
+/* purgecss end ignore */
+
+@import "tailwindcss/utilities";
