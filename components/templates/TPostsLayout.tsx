@@ -5,6 +5,7 @@ import ALink from "@/components/atoms/ALink";
 import AImage from "@/components/atoms/AImage";
 import AParagraph from "@/components/atoms/AParagraph";
 import APostHeading from "@/components/atoms/APostHeading";
+import MHead from "@/components/molecules/MHead";
 import OPostHeader from "@/components/organisms/OPostHeader";
 
 interface Props {
@@ -29,6 +30,7 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
 
   return (
     <div className="blog-post-content px-8">
+      <MHead title={frontMatter.title} description={frontMatter.description} />
       <MDXProvider components={state}>
         <OPostHeader frontMatter={frontMatter} />
         {children}
