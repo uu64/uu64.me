@@ -1,9 +1,11 @@
-import path from "path";
 // cannnot use babel-plugin-impoprt-glob-array and webpack alias together
-import { frontMatter as fms, _importMeta as metadatas } from "../posts/*.mdx";
+import { frontMatter as fms, _importMeta as metadatas } from "../posts/**/*.mdx";
+
+const MDX_FILE_ROOT = "/posts/";
+const POST_RESOURCE_ROOT = "/posts/";
 
 export interface IPost {
-  filepath: string;
+  resourcePath: string;
   frontMatter: FrontMatter;
 }
 
@@ -12,8 +14,10 @@ class MdxUtil {
     const posts: IPost[] = [];
 
     fms.forEach((fm, index) => {
+      const absolutePath = metadatas[index].absolutePath;
+      const relativePath = absolutePath.split(MDX_FILE_ROOT).slice(-1)[0];
       posts.push({
-        filepath: metadatas[index].absolutePath,
+        resourcePath: `${POST_RESOURCE_ROOT}${relativePath.split(".").slice(0, -1).join(".")}`,
         frontMatter: fm,
       });
     });
@@ -21,12 +25,12 @@ class MdxUtil {
   }
 
   private static sortDescPost(a: IPost, b: IPost): number {
-    const pathA = a.filepath;
-    const pathB = b.filepath;
-    if (pathA > pathB) {
+    const dateA = a.frontMatter.date;
+    const dateB = b.frontMatter.date;
+    if (dateA > dateB) {
       return -1;
     }
-    if (pathA < pathB) {
+    if (dateA < dateB) {
       return 1;
     }
     return 0;
@@ -36,11 +40,11 @@ class MdxUtil {
     return MdxUtil.posts;
   }
 
-  static async getPostById(id: string): Promise<IPost> {
-    const filted = MdxUtil.posts.filter((post) => {
-      return path.basename(post.filepath, ".mdx") === id;
+  static async getPostByResourcePath(resourcePath: string): Promise<IPost> {
+    const filtered = MdxUtil.posts.filter((post) => {
+      return post.resourcePath === resourcePath;
     });
-    return filted[0];
+    return filtered[0];
   }
 }
 

@@ -1,10 +1,8 @@
 import React from "react";
 import { GetStaticProps } from "next";
-import { IPostItem } from "@/components/molecules/MPost";
-import OPostList from "@/components/organisms/OPostList";
+import OPostList, { IPostItem } from "@/components/organisms/OPostList";
 import TIndexLayout from "@/components/templates/TIndexLayout";
 import MdxUtil from "@/lib/MdxUtil";
-import path from "path";
 
 interface Props {
   posts: IPostItem[];
@@ -25,7 +23,7 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       posts: posts.map((post): IPostItem => {
         return {
-          resourcePath: `/posts/${path.basename(post.filepath, ".mdx")}`,
+          resourcePath: post.resourcePath,
           date: post.frontMatter.date,
           title: post.frontMatter.title,
         };

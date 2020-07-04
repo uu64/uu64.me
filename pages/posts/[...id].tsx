@@ -1,4 +1,3 @@
-import path from "path";
 import React from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
 import dynamic from "next/dynamic";
@@ -6,14 +5,14 @@ import TPostsLayout from "@/components/templates/TPostsLayout";
 import MdxUtil from "@/lib/MdxUtil";
 
 interface Props {
-  id: string;
+  id: string | string[];
   frontMatter: FrontMatter;
 }
 
 const Post: React.FC<Props> = (props: Props) => {
   const { id, frontMatter } = props;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const MDX = dynamic(() => import(`@/posts/${id}.mdx`) as any);
+  const MDX = dynamic(() => import(`@/posts/${(id as string[]).join("/")}.mdx`) as any);
   return (
     <TPostsLayout frontMatter={frontMatter}>
       <MDX />
@@ -24,13 +23,14 @@ const Post: React.FC<Props> = (props: Props) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   const posts =  await MdxUtil.getPosts();
   const paths = posts.map((post): string => {
-    return `/posts/${path.basename(post.filepath, ".mdx")}`;
+    return post.resourcePath;
   });
   return { paths, fallback: false };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const post = await MdxUtil.getPostById(params.id as string);
+  const resourcePath = `/posts/${(params.id as string[]).join("/")}`;
+  const post = await MdxUtil.getPostByResourcePath(resourcePath);
   return {
     props: {
       id: params.id,

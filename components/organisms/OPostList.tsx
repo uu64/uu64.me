@@ -1,5 +1,11 @@
 import React from "react";
-import MPost, { IPostItem } from "@/components/molecules/MPost";
+import MPost from "@/components/molecules/MPost";
+
+export interface IPostItem{
+  resourcePath: string;
+  date: string;
+  title: string;
+}
 
 interface Props {
   posts: IPostItem[];
@@ -11,7 +17,7 @@ const OPostList: React.FC<Props> = (props: Props) => {
     <ul>
       {posts.map((post) => (
         <li key={post.resourcePath}>
-          <MPost post={post} />
+          <MPost resourcePath={post.resourcePath} date={post.date} title={post.title} />
         </li>
       ))}
     </ul>
