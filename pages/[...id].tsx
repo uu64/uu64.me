@@ -29,7 +29,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const resourcePath = `/posts/${(params.id as string[]).join("/")}`;
+  const resourcePath = `/${(params.id as string[]).join("/")}`;
   const post = await MdxUtil.getPostByResourcePath(resourcePath);
   return {
     props: {

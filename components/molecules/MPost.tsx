@@ -12,7 +12,7 @@ const MPost: React.FC<Props> = (props: Props) => {
   return (
     <div className="px-8 py-4">
       <p className="py-2 text-gray-600">{date}</p>
-      <ANextLink href="/posts/[...id]" as={resourcePath}>
+      <ANextLink href="/[...id]" as={resourcePath}>
         <a><h2>{title}</h2></a>
       </ANextLink>
     </div>

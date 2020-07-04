@@ -2,7 +2,7 @@
 import { frontMatter as fms, _importMeta as metadatas } from "../posts/**/*.mdx";
 
 const MDX_FILE_ROOT = "/posts/";
-const POST_RESOURCE_ROOT = "/posts/";
+const POST_RESOURCE_ROOT = "/";
 
 export interface IPost {
   resourcePath: string;
