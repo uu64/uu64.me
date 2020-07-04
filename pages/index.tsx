@@ -21,14 +21,16 @@ export const getStaticProps: GetStaticProps = async () => {
   const posts = await MdxUtil.getPosts();
   return {
     props: {
-      posts: posts.map((post): IPostItem => {
-        return {
-          resourcePath: post.resourcePath,
-          date: post.frontMatter.date,
-          title: post.frontMatter.title,
-        };
-      })
-    }
+      posts: posts.map(
+        (post): IPostItem => {
+          return {
+            resourcePath: post.resourcePath,
+            date: post.frontMatter.date,
+            title: post.frontMatter.title,
+          };
+        }
+      ),
+    },
   };
 };
 

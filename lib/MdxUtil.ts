@@ -1,5 +1,8 @@
 // cannnot use babel-plugin-impoprt-glob-array and webpack alias together
-import { frontMatter as fms, _importMeta as metadatas } from "../posts/**/*.mdx";
+import {
+  frontMatter as fms,
+  _importMeta as metadatas,
+} from "../posts/**/*.mdx";
 
 const MDX_FILE_ROOT = "/posts/";
 const POST_RESOURCE_ROOT = "/";
@@ -17,7 +20,10 @@ class MdxUtil {
       const absolutePath = metadatas[index].absolutePath;
       const relativePath = absolutePath.split(MDX_FILE_ROOT).slice(-1)[0];
       posts.push({
-        resourcePath: `${POST_RESOURCE_ROOT}${relativePath.split(".").slice(0, -1).join(".")}`,
+        resourcePath: `${POST_RESOURCE_ROOT}${relativePath
+          .split(".")
+          .slice(0, -1)
+          .join(".")}`,
         frontMatter: fm,
       });
     });

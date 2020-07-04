@@ -17,4 +17,3 @@ const ALink: React.FC<Props> = (props: Props) => {
 };
 
 export default ALink;
-

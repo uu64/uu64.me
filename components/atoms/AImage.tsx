@@ -1,9 +1,9 @@
 import React from "react";
 
 interface Props {
-  src: string,
-  title: string,
-  alt: string,
+  src: string;
+  title: string;
+  alt: string;
 }
 
 const AImage: React.FC<Props> = (props: Props) => {
@@ -11,12 +11,11 @@ const AImage: React.FC<Props> = (props: Props) => {
   return (
     <>
       <img className="py-4" src={src} alt={alt} />
-      {title &&
+      {title && (
         <span className="block text-center text-gray-600">{title}</span>
-      }
+      )}
     </>
   );
 };
 
 export default AImage;
-
