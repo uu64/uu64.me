@@ -11,8 +11,10 @@ interface Props {
 
 const Post: React.FC<Props> = (props: Props) => {
   const { id, frontMatter } = props;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const MDX = dynamic(() => import(`@/posts/${(id as string[]).join("/")}.mdx`) as any);
+  const MDX = dynamic(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    () => import(`@/posts/${(id as string[]).join("/")}.mdx`) as any
+  );
   return (
     <TPostsLayout frontMatter={frontMatter}>
       <MDX />
@@ -21,7 +23,7 @@ const Post: React.FC<Props> = (props: Props) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const posts =  await MdxUtil.getPosts();
+  const posts = await MdxUtil.getPosts();
   const paths = posts.map((post): string => {
     return post.resourcePath;
   });
@@ -35,7 +37,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       id: params.id,
       frontMatter: post.frontMatter,
-    }
+    },
   };
 };
 

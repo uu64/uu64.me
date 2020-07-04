@@ -6,22 +6,23 @@ module.exports = {
     node: true,
   },
   parser: "@typescript-eslint/parser",
-  plugins: [
-    "react",
-    "@typescript-eslint",
-  ],
+  plugins: ["@typescript-eslint", "react", "prettier"],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
+    "prettier",
+    "prettier/@typescript-eslint",
+    "prettier/react",
   ],
   rules: {
+    "prettier/prettier": "error",
     semi: ["error", "always"],
     quotes: ["error", "double"],
   },
   settings: {
     react: {
-      version: "16.13"
-    }
-  }
+      version: "16.13",
+    },
+  },
 };

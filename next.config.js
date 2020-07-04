@@ -10,7 +10,7 @@ module.exports = {
       use: [
         options.defaultLoaders.babel,
         "@mdx-js/loader",
-        path.join(__dirname, "./lib/fm-loader")
+        path.join(__dirname, "./lib/fm-loader"),
       ],
     });
 

@@ -2,11 +2,7 @@
 const { colors, fontFamily } = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  purge: [
-    "./src/**/*.html",
-    "./src/**/*.vue",
-    "./src/**/*.jsx",
-  ],
+  purge: ["./src/**/*.html", "./src/**/*.vue", "./src/**/*.jsx"],
   theme: {
     colors: {
       ...colors,
@@ -15,11 +11,11 @@ module.exports = {
         normal: "#1e56a0",
         light: "#f8f8ff",
         white: "#f6f6f6",
-      }
+      },
     },
     fontFamily: {
       ...fontFamily,
-      logo: ["Montserrat", "san-serif"]
+      logo: ["Montserrat", "san-serif"],
     },
     screens: {
       sm: "640px",
