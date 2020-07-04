@@ -14,7 +14,7 @@ interface Props {
 
 const H1: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h1>{children}</h1>;
+  return <h1 className="pt-8 pb-2 font-semibold">{children}</h1>;
 };
 
 const H2: React.FC<Props> = (props: Props) => {
@@ -24,17 +24,17 @@ const H2: React.FC<Props> = (props: Props) => {
 
 const H3: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h3>{children}</h3>;
+  return <h3 className="pt-4 pb-2 font-semibold">{children}</h3>;
 };
 
 const H4: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h4>{children}</h4>;
+  return <h4 className="pb-2 font-semibold">{children}</h4>;
 };
 
 const H5: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h5>{children}</h5>;
+  return <h5 className="pb-2 font-semibold">{children}</h5>;
 };
 
 const ABlogHeading: React.FC<Props> & ABlogHeading = () => null;

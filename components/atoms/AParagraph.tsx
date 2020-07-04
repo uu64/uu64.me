@@ -6,7 +6,7 @@ interface Props {
 
 const AParagraph: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <p className="leading-relaxed py-2">{children}</p>;
+  return <p className="leading-relaxed py-4">{children}</p>;
 };
 
 export default AParagraph;

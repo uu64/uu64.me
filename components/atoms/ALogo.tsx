@@ -5,7 +5,7 @@ import blog from "@/data/blog.json";
 const ALogo: React.FC = () => {
   return (
     <Link href="/">
-      <span className="logo">
+      <span className="font-logo">
         <a>{blog.title}</a>
       </span>
     </Link>

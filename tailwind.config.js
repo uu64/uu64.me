@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { colors } = require("tailwindcss/defaultTheme");
+const { colors, fontFamily } = require("tailwindcss/defaultTheme");
 
 module.exports = {
   purge: [
@@ -17,11 +17,15 @@ module.exports = {
         white: "#f6f6f6",
       }
     },
+    fontFamily: {
+      ...fontFamily,
+      logo: ["Montserrat", "san-serif"]
+    },
     screens: {
-      "sm": "640px",
-      "md": "768px",
-      "lg": "1024px",
-      "xl": "1280px",
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
     },
   },
   variants: {},

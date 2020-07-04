@@ -1,8 +1,10 @@
 import React from "react";
 import { MDXProvider } from "@mdx-js/react";
-import APostHeading from "@/components/atoms/APostHeading";
-import AParagraph from "@/components/atoms/AParagraph";
 import AList from "@/components/atoms/AList";
+import ALink from "@/components/atoms/ALink";
+import AImage from "@/components/atoms/AImage";
+import AParagraph from "@/components/atoms/AParagraph";
+import APostHeading from "@/components/atoms/APostHeading";
 import OPostHeader from "@/components/organisms/OPostHeader";
 
 interface Props {
@@ -20,7 +22,9 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
     h5: APostHeading.H5,
     p: AParagraph,
     ul: AList.Ul,
-    li: AList.Li
+    li: AList.Li,
+    a: ALink,
+    img: AImage,
   };
 
   return (

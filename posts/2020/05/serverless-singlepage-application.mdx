@@ -1,0 +1,57 @@
+---
+title: "O'REILLY サーバーレスシングルページアプリケーション を読んで"
+date: "2020-05-13"
+description: "書籍「サーバーレスシングルページアプリケーション」を読みつつ、AWS CloudFormation を用いたサーバーレス環境構築や監視について勉強しました。"
+cover: "book.jpg"
+---
+
+O'REILLY サーバーレスシングルページアプリケーション を読んだ感想など。
+
+https://www.oreilly.co.jp/books/9784873118062/
+
+
+## 書評
+
+サーバーレス構成をAWSを用いて実現するにあたって、
+必要となるであろう主なAWSサービスやセキュリティ、監視について一通りさらうことができます。
+
+私は業務の中で、本書籍で扱う一部のAWSサービスについて技術調査をしたことがあったため、
+それら機能の説明部分は流し読みですみましたが、
+まったく知見がない方はAWS BlackBeltなどの公式資料も横に置いておいたほうが理解しやすいと思います。
+
+作者がソースコードを公開しているため、いざとなったらそこを参照すれば動かすことはできるでしょう。
+
+本書ではフロントはES5 + Jasmineで書くのですが、欲を言えばもう少しモダンなライブラリで書きたかったです。
+（そうするとライブラリ自体の説明が増えてしまうなどの都合はあると思うのですが）
+
+最終的には、以下のようなUIのアプリが完成します！
+
+![ui](/2020/05/ui.png)
+
+
+## 工夫点
+
+- お勉強とリソースの消し忘れ防止のために、CloudFormation, AWS SAMを使って構築
+  - ソースコードは https://github.com/uu64/learnjs
+  - AWS SAMは初めて使ったけど、ローカルでのLambdaのデバッグが楽でびっくり。
+
+- [AWSを使って学ぶ　監視設計](https://booth.pm/ja/items/1883927) を参考に、CloudWatchとX-RAYを使った監視も試した
+  - 上記も非常に良い本です。SLI/SLOの運用方法や考え方、参考になりました。
+
+
+## つまったところ
+
+### API Gateway に POST リクエストした際、Lambda 上でリクエストボディが undefined
+
+Lambda関数ハンドラの第一引数 event の構造が、API Gatewayを経由した場合とそうでない場合で変わるため。
+- https://docs.aws.amazon.com/ja_jp/lambda/latest/dg/nodejs-handler.html
+
+
+### AWS SAMでAPI Gateway + Lambda を構築した場合に、レスポンスが返ってこない
+
+SAMだとデフォルトでLambdaプロキシ統合が使われるので、以下のページのように所定のレスポンス形式を返す必要がある。
+- https://docs.aws.amazon.com/ja_jp/apigateway/latest/developerguide/api-gateway-create-api-as-simple-proxy-for-lambda.html
+
+
+あと最新版の node で Lambda を実装する場合、callbackを使った値の返却が推奨されている。
+- https://aws.typepad.com/sajp/2016/04/node-js-4-3-2-runtime-now-available-on-lambda.htmlA
