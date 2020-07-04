@@ -7,3 +7,7 @@ html, body, #__next {
 .app-main {
   min-height: 80%;
 }
+
+.blog-post-content a {
+  word-wrap:break-word;
+}
