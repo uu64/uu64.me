@@ -10,7 +10,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
     <>
       <OGlobalHeader />
       <div className="app-main bg-custom-light">
-        <div className="container mx-auto max-w-xl py-8">
+        <div className="mx-auto max-w-xl py-8">
           <Component {...pageProps} />
         </div>
       </div>
