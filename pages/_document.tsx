@@ -15,9 +15,8 @@ class MyDocument extends Document {
   }
 
   render(): JSX.Element {
-    console.log("__document");
     return (
-      <Html>
+      <Html lang="ja">
         <Head>
           <script
             async
