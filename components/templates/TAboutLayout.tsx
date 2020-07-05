@@ -6,7 +6,7 @@ import AImage from "@/components/atoms/AImage";
 import AParagraph from "@/components/atoms/AParagraph";
 import APostHeading from "@/components/atoms/APostHeading";
 import MHead from "@/components/molecules/MHead";
-import OPostHeader from "@/components/organisms/OPostHeader";
+import OAboutHeader from "@/components/organisms/OAboutHeader";
 import blog from "@/data/blog.json";
 
 interface Props {
@@ -14,8 +14,8 @@ interface Props {
   children: React.ReactNode;
 }
 
-const TPostsLayout: React.FC<Props> = (props: Props) => {
-  const { children, frontMatter } = props;
+const TAboutLayout: React.FC<Props> = (props: Props) => {
+  const { children } = props;
   const state = {
     h1: APostHeading.H1,
     h2: APostHeading.H2,
@@ -30,17 +30,17 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
   };
 
   return (
-    <div className="blog-post-content px-8">
+    <div className="about-content px-8">
       <MHead
-        title={`${frontMatter.title} | ${blog.title}`}
-        description={frontMatter.description}
+        title={`${blog.pages.about.title} | ${blog.title}`}
+        description={blog.pages.about.description}
       />
       <MDXProvider components={state}>
-        <OPostHeader frontMatter={frontMatter} />
+        <OAboutHeader />
         {children}
       </MDXProvider>
     </div>
   );
 };
 
-export default TPostsLayout;
+export default TAboutLayout;

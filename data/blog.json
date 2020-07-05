@@ -1,5 +1,11 @@
 {
   "title": "uu64.me",
   "description": "技術的な活動の記録など。",
-  "copyright": "© 2019 uu64"
+  "copyright": "© 2019 uu64",
+  "pages": {
+    "about": {
+      "title": "About",
+      "description": "このサイトについて"
+    }
+  }
 }

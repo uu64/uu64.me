@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 
 interface Props {
-  as: string;
+  as?: string;
   href: string;
   children: React.ReactNode;
 }

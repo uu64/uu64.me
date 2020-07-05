@@ -1,11 +1,15 @@
 import React from "react";
 import ALogo from "@/components/atoms/ALogo";
+import MMenu from "@/components/molecules/MMenu";
 
 const OGlobalHeader: React.FC = () => {
   return (
-    <div className="bg-custom-normal px-8 py-2 text-custom-white flex items-end">
-      <ALogo />
-    </div>
+    <nav className="bg-custom-normal px-8 py-2 text-custom-white flex flex-grow items-end">
+      <div className="flex-grow">
+        <ALogo />
+      </div>
+      <MMenu />
+    </nav>
   );
 };
 
