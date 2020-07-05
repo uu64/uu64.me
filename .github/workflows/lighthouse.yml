@@ -1,0 +1,30 @@
+name: lighthouse
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup NodeJs
+        uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - name: Info
+        run: |
+          echo "node: `node --version`"
+          echo "npm:  v`npm --version`"
+          echo "yarn: v`yarn --version`"
+          git status
+      - name: Install Dependencies
+        run: yarn
+      - name: Lighthouse
+        run: yarn lhci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
