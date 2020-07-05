@@ -10,21 +10,6 @@ const MHead: React.FC<Props> = (props: Props) => {
   const { title, description } = props;
   return (
     <Head>
-      <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=UA-171594157-1"
-      ></script>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'UA-171594157-1');
-          `,
-        }}
-      />
       <title>{title}</title>
       <meta name="description" content={description} />
     </Head>
