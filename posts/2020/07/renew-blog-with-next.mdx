@@ -1,7 +1,7 @@
 ---
 title: "Next.js + TypeScript + MDXでブログシステムを構築した"
 date: "2020-07-04"
-description: "Next.js + TypeScript + MDXの構成でブログシステムを構築しました。スタイルは Tailwind CSS を使いました。"
+description: "Next.js + TypeScript + MDXの構成でブログシステムを構築しました。コンポーネント設計には AtomicDesign、スタイルには Tailwind CSS を採用しています。"
 ---
 
 ちょうど一年前、Gatsby JS でこのブログを作ったのだけれど、
@@ -42,6 +42,7 @@ markdown ファイルから個別の記事を生成して、
 たとえば「箇条書きのアイテムの間隔がいまいちだな」と思ったら
 対応するカスタムコンポーネントにスタイルを追加すれば良いので、レイアウトの調整がとてもやりやすくなった。
 
+![mdx](/2020/07/mdx.png "変換前の markdown (MDX) ファイル。MDXコンポーネントをさらにカスタムコンポーネントでラップしてヘッダーを表示している。")
 
 ### Tailwind CSS を使ったレスポンシブ対応
 
@@ -58,12 +59,12 @@ Bootstrap のようなライブラリと異なり、ボタン等のコンポー�
 文字バランスを保ったまま画面サイズに応じたレイアウトを適用することができる。
 
 
-### Github Actions を使った CI/CD
+### その他
 
-TypeScript化はもちろん、
-Github Actions を使った自動リントや netlify への自動デプロイを設定した。
+TypeScript化はもちろん実施。
 
-lighthouse も CI でチェックするようにした。
+Github Actions を使った push 時のリント、Lighthouse CIの実行、
+netlify への自動デプロイも設定した。
 
 
 ## 感想
