@@ -34,6 +34,9 @@ const TAboutLayout: React.FC<Props> = (props: Props) => {
       <MHead
         title={`${blog.pages.about.title} | ${blog.title}`}
         description={blog.pages.about.description}
+        pageUrl={`${blog.url}/about`}
+        pageType="website"
+        coverImage="/icon.jpg"
       />
       <MDXProvider components={state}>
         <OAboutHeader />
