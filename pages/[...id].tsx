@@ -17,10 +17,7 @@ const Post: React.FC<Props> = (props: Props) => {
     () => import(`@/posts/${postPath}.mdx`) as any
   );
   return (
-    <TPostsLayout
-      frontMatter={frontMatter}
-      path={`${postPath}`}
-    >
+    <TPostsLayout frontMatter={frontMatter} path={`${postPath}`}>
       <MDX />
     </TPostsLayout>
   );
