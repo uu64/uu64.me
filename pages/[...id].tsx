@@ -18,7 +18,7 @@ const Post: React.FC<Props> = (props: Props) => {
   return (
     <TPostsLayout
       frontMatter={frontMatter}
-      path={`posts/${(id as string[]).join("/")}`}
+      path={`${(id as string[]).join("/")}`}
     >
       <MDX />
     </TPostsLayout>
