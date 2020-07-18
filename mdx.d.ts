@@ -2,6 +2,7 @@ interface FrontMatter {
   title: string;
   date: string;
   description: string;
+  cover: string;
 }
 
 // See: https://github.com/jescalan/babel-plugin-import-glob-array

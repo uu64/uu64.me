@@ -16,7 +16,7 @@ const Post: React.FC<Props> = (props: Props) => {
     () => import(`@/posts/${(id as string[]).join("/")}.mdx`) as any
   );
   return (
-    <TPostsLayout frontMatter={frontMatter}>
+    <TPostsLayout frontMatter={frontMatter} path={`posts/${(id as string[]).join("/")}`}>
       <MDX />
     </TPostsLayout>
   );

@@ -11,11 +11,12 @@ import blog from "@/data/blog.json";
 
 interface Props {
   frontMatter: FrontMatter;
+  path: string;
   children: React.ReactNode;
 }
 
 const TPostsLayout: React.FC<Props> = (props: Props) => {
-  const { children, frontMatter } = props;
+  const { children, frontMatter, path } = props;
   const state = {
     h1: APostHeading.H1,
     h2: APostHeading.H2,
@@ -34,6 +35,9 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
       <MHead
         title={`${frontMatter.title} | ${blog.title}`}
         description={frontMatter.description}
+        pageUrl={`${blog.url}/${path}`}
+        pageType="article"
+        coverImage={frontMatter.cover}
       />
       <MDXProvider components={state}>
         <OPostHeader frontMatter={frontMatter} />
