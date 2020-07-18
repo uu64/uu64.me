@@ -11,14 +11,15 @@ interface Props {
 
 const Post: React.FC<Props> = (props: Props) => {
   const { id, frontMatter } = props;
+  const postPath = (id as string[]).join("/");
   const MDX = dynamic(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    () => import(`@/posts/${(id as string[]).join("/")}.mdx`) as any
+    () => import(`@/posts/${postPath}.mdx`) as any
   );
   return (
     <TPostsLayout
       frontMatter={frontMatter}
-      path={`${(id as string[]).join("/")}`}
+      path={`${postPath}`}
     >
       <MDX />
     </TPostsLayout>
