@@ -15,8 +15,8 @@ const TIndexLayout: React.FC<Props> = (props: Props) => {
         title={blog.title}
         description={blog.description}
         pageUrl={blog.url}
+        coverImageUrl={`${blog.url}/icon.jpg`}
         pageType="website"
-        coverImage="/icon.jpg"
       />
       <OIndexHeader />
       {children}

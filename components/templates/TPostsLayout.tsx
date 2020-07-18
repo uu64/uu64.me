@@ -36,8 +36,8 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
         title={`${frontMatter.title} | ${blog.title}`}
         description={frontMatter.description}
         pageUrl={`${blog.url}/${path}`}
+        coverImageUrl={`${blog.url}${frontMatter.cover}`}
         pageType="article"
-        coverImage={frontMatter.cover}
       />
       <MDXProvider components={state}>
         <OPostHeader frontMatter={frontMatter} />

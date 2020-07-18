@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import author from "@/data/author.json";
 import blog from "@/data/blog.json";
 
 interface Props {
@@ -7,11 +8,11 @@ interface Props {
   description: string;
   pageUrl: string;
   pageType: "article" | "website" | "profile";
-  coverImage: string;
+  coverImageUrl: string;
 }
 
 const MHead: React.FC<Props> = (props: Props) => {
-  const { title, description, pageUrl, pageType, coverImage } = props;
+  const { title, description, pageUrl, pageType, coverImageUrl } = props;
   return (
     <Head>
       <title>{title}</title>
@@ -20,11 +21,14 @@ const MHead: React.FC<Props> = (props: Props) => {
       <meta property="og:title" content={title} />
       <meta property="og:type" content={pageType} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={coverImage} />
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:site" content="_uu64" />
+      <meta property="og:image" content={coverImageUrl} />
       <meta property="og:site_name" content={blog.title} />
       <meta property="og:locale" content="ja_JP" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content={author.twitter.id} />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={coverImageUrl} />
     </Head>
   );
 };
