@@ -10,16 +10,19 @@ dirname ${0}
 year=$(date "+%Y")
 month=$(date "+%m")
 
-path="$(dirname "${0}")/posts/${year}/${month}"
+post_path="$(dirname "${0}")/posts/${year}/${month}"
+image_path="$(dirname "${0}")/public/${year}/${month}"
 title="${1}"
 
-mkdir -p "${path}"
+mkdir -p "${post_path}"
+mkdir -p "${image_path}"
 
-cat << EOF > "${path}/${title}.mdx"
+cat << EOF > "${post_path}/${title}.mdx"
 ---
 title: "${title}"
 date: "$(date "+%Y-%m-%d")"
 description: ""
+cover: "${image_path}/"
 ---
 
 ## ${title}
