@@ -11,7 +11,7 @@ year=$(date "+%Y")
 month=$(date "+%m")
 
 post_path="$(dirname "${0}")/posts/${year}/${month}"
-image_path="$(dirname "${0}")/public/${year}/${month}"
+image_path="/${year}/${month}"
 title="${1}"
 
 mkdir -p "${post_path}"
