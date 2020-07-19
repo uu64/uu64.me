@@ -4,6 +4,7 @@ import AList from "@/components/atoms/AList";
 import ALink from "@/components/atoms/ALink";
 import AImage from "@/components/atoms/AImage";
 import AParagraph from "@/components/atoms/AParagraph";
+import ABlockquote from "@/components/atoms/ABlockquote";
 import APostHeading from "@/components/atoms/APostHeading";
 import MHead from "@/components/molecules/MHead";
 import OPostHeader from "@/components/organisms/OPostHeader";
@@ -24,6 +25,7 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
     h4: APostHeading.H4,
     h5: APostHeading.H5,
     p: AParagraph,
+    blockquote: ABlockquote,
     ul: AList.Ul,
     li: AList.Li,
     a: ALink,
