@@ -7,7 +7,7 @@ import AParagraph from "@/components/atoms/AParagraph";
 import APostHeading from "@/components/atoms/APostHeading";
 import MHead from "@/components/molecules/MHead";
 import OAboutHeader from "@/components/organisms/OAboutHeader";
-import blog from "@/data/blog.json";
+import siteconfig from "@/siteconfig.json";
 
 interface Props {
   frontMatter: FrontMatter;
@@ -32,10 +32,10 @@ const TAboutLayout: React.FC<Props> = (props: Props) => {
   return (
     <div className="about-content px-8">
       <MHead
-        title={`${blog.pages.about.title} | ${blog.title}`}
-        description={blog.pages.about.description}
-        pageUrl={`${blog.url}/about`}
-        coverImageUrl={`${blog.url}/icon.jpg`}
+        title={`${siteconfig.pages.about.title} | ${siteconfig.name}`}
+        description={siteconfig.pages.about.description}
+        pageUrl={`${siteconfig.url}/about`}
+        coverImageUrl={`${siteconfig.url}/icon.jpg`}
         pageType="website"
       />
       <MDXProvider components={state}>

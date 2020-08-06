@@ -1,0 +1,20 @@
+{
+  "url": "https://uu64.me",
+  "name": "uu64.me",
+  "copyright": "© 2019 uu64",
+  "pages": {
+    "blog": {
+      "title": "uu64.me",
+      "description": "技術的な活動の記録など。"
+    },
+    "about": {
+      "title": "About",
+      "description": "このサイトについて"
+    }
+  },
+  "author": {
+    "twitter": {
+      "id": "@_uu64"
+    }
+  }
+}

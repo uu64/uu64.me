@@ -1,20 +1,19 @@
 {
   "name": "uu64.me",
-  "version": "a.0.0",
+  "version": "1.0.0",
   "author": "uu64",
-  "license": "UNLICENSED",
   "private": true,
   "scripts": {
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "export": "next build && next export",
+    "export": "next build && next export && cp _redirects out",
     "lint": "eslint .",
     "lhci": "lhci autorun"
   },
   "dependencies": {
     "@next/mdx": "^9.4.4",
-    "next": "^9.4.4",
+    "next": "9.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "tailwindcss": "^1.4.6"

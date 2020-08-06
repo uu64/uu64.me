@@ -8,7 +8,7 @@ import ABlockquote from "@/components/atoms/ABlockquote";
 import APostHeading from "@/components/atoms/APostHeading";
 import MHead from "@/components/molecules/MHead";
 import OPostHeader from "@/components/organisms/OPostHeader";
-import blog from "@/data/blog.json";
+import siteconfig from "@/siteconfig.json";
 
 interface Props {
   frontMatter: FrontMatter;
@@ -35,10 +35,10 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
   return (
     <div className="blog-post-content px-8">
       <MHead
-        title={`${frontMatter.title} | ${blog.title}`}
+        title={`${frontMatter.title} | ${siteconfig.name}`}
         description={frontMatter.description}
-        pageUrl={`${blog.url}/${path}`}
-        coverImageUrl={`${blog.url}${frontMatter.cover}`}
+        pageUrl={`${siteconfig.url}${path}`}
+        coverImageUrl={`${siteconfig.url}${frontMatter.cover}`}
         pageType="article"
       />
       <MDXProvider components={state}>

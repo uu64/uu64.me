@@ -1,0 +1,5 @@
+# This is Netlify redirect configuration file
+# See: https://docs.netlify.com/routing/redirects/#syntax-for-the-redirects-file
+
+/:year/:month/:slug   /blog/:year/:month/:slug
+/blog                 /

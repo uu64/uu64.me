@@ -2,7 +2,7 @@ import React from "react";
 import MPost from "@/components/molecules/MPost";
 
 export interface IPostItem {
-  resourcePath: string;
+  resourceId: string;
   date: string;
   title: string;
 }
@@ -16,9 +16,9 @@ const OPostList: React.FC<Props> = (props: Props) => {
   return (
     <ul>
       {posts.map((post) => (
-        <li key={post.resourcePath}>
+        <li key={post.resourceId}>
           <MPost
-            resourcePath={post.resourcePath}
+            resourceId={post.resourceId}
             date={post.date}
             title={post.title}
           />

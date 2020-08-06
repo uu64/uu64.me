@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 
 module.exports = {
@@ -16,4 +15,19 @@ module.exports = {
 
     return config;
   },
+  // NOTE: Does not work when app is deployed on Netlify.
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/2019/:id*",
+  //       destination: "/blog/2019/:id*",
+  //       permanent: true,
+  //     },
+  //     {
+  //       source: "/2020/:id*",
+  //       destination: "/blog/2020/:id*",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
