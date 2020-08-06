@@ -16,4 +16,18 @@ module.exports = {
 
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: "/2019/:id*",
+        destination: "/blog/2019/:id*",
+        permanent: true,
+      },
+      {
+        source: "/2020/:id*",
+        destination: "/blog/2020/:id*",
+        permanent: true,
+      },
+    ];
+  },
 };
