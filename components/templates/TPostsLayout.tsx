@@ -37,7 +37,7 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
       <MHead
         title={`${frontMatter.title} | ${blog.title}`}
         description={frontMatter.description}
-        pageUrl={`${blog.url}/${path}`}
+        pageUrl={`${blog.url}${path}`}
         coverImageUrl={`${blog.url}${frontMatter.cover}`}
         pageType="article"
       />
