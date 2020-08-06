@@ -15,18 +15,19 @@ module.exports = {
 
     return config;
   },
-  async redirects() {
-    return [
-      {
-        source: "/2019/:id*",
-        destination: "/blog/2019/:id*",
-        permanent: true,
-      },
-      {
-        source: "/2020/:id*",
-        destination: "/blog/2020/:id*",
-        permanent: true,
-      },
-    ];
-  },
+  // NOTE: Does not work when app is deployed on Netlify.
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/2019/:id*",
+  //       destination: "/blog/2019/:id*",
+  //       permanent: true,
+  //     },
+  //     {
+  //       source: "/2020/:id*",
+  //       destination: "/blog/2020/:id*",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
