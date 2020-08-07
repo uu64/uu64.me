@@ -34,6 +34,10 @@ class MyDocument extends Document {
               `,
             }}
           />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
           {/* twitter */}
           <script
             async
@@ -47,10 +51,6 @@ class MyDocument extends Document {
             src="https://b.st-hatena.com/js/bookmark_button.js"
             charSet="utf-8"
           />
-        </Head>
-        <body>
-          <Main />
-          <NextScript />
         </body>
       </Html>
     );
