@@ -11,10 +11,7 @@ interface Props {
 
 const Post: React.FC<Props> = (props: Props) => {
   const { resourceId, frontMatter } = props;
-  const MDX = dynamic(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    () => import(`@/posts/${resourceId}.mdx`) as any
-  );
+  const MDX = dynamic(() => import(`@/posts/${resourceId}.mdx`));
   return (
     <TPostsLayout frontMatter={frontMatter} path={`/blog/${resourceId}`}>
       <MDX />

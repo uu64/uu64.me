@@ -6,7 +6,9 @@ import AImage from "@/components/atoms/AImage";
 import AParagraph from "@/components/atoms/AParagraph";
 import ABlockquote from "@/components/atoms/ABlockquote";
 import APostHeading from "@/components/atoms/APostHeading";
+import AInlineCode from "@/components/atoms/AInlineCode";
 import MHead from "@/components/molecules/MHead";
+import MCodeBlock from "@/components/molecules/MCodeBlock";
 import OPostHeader from "@/components/organisms/OPostHeader";
 import siteconfig from "@/siteconfig.json";
 
@@ -30,6 +32,8 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
     li: AList.Li,
     a: ALink,
     img: AImage,
+    inlineCode: AInlineCode,
+    code: MCodeBlock,
   };
 
   return (
