@@ -4,11 +4,13 @@ import MMenu from "@/components/molecules/MMenu";
 
 const OGlobalHeader: React.FC = () => {
   return (
-    <nav className="bg-custom-normal px-8 py-2 text-custom-white flex flex-grow items-end">
-      <div className="flex-grow">
-        <ALogo />
+    <nav className="bg-custom-normal text-custom-white">
+      <div className="max-w-2xl px-8 py-2 flex items-end mx-auto">
+        <div className="flex-grow">
+          <ALogo />
+        </div>
+        <MMenu />
       </div>
-      <MMenu />
     </nav>
   );
 };

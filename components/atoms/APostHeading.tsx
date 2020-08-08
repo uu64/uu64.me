@@ -14,17 +14,17 @@ interface Props {
 
 const H1: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h1 className="pt-8 pb-2 font-semibold">{children}</h1>;
+  return <h1 className="py-8 font-semibold">{children}</h1>;
 };
 
 const H2: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h2 className="pt-8 pb-2 font-semibold">{children}</h2>;
+  return <h2 className="py-8 font-semibold">{children}</h2>;
 };
 
 const H3: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h3 className="pt-4 pb-2 font-semibold">{children}</h3>;
+  return <h3 className="py-4 font-semibold">{children}</h3>;
 };
 
 const H4: React.FC<Props> = (props: Props) => {
