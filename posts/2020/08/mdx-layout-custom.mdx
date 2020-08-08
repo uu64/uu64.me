@@ -21,7 +21,7 @@ Next.js + MDXでブログ（このサイト）を構築した際、
 一番シンプルな方法は各 MDX ファイル内に共通コンポーネントの呼出しを記述する方法。
 けれど、すべての MDX ファイルに以下のような記述をするのは DRY 原則に反するのでやりたくない。
 
-```
+```javascript
 import CommonHeader from "@/components/CommonHeader";
 import CommonHeader from "@/components/CommonFooter";
 
