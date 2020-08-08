@@ -18,6 +18,7 @@ class MyDocument extends Document {
     return (
       <Html lang="ja">
         <Head>
+          {/* google analytics */}
           <script
             async
             src="https://www.googletagmanager.com/gtag/js?id=UA-171594157-1"
@@ -37,6 +38,19 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          {/* twitter */}
+          <script
+            async
+            src="https://platform.twitter.com/widgets.js"
+            charSet="utf-8"
+          />
+          {/* hatena */}
+          <script
+            async
+            type="text/javascript"
+            src="https://b.st-hatena.com/js/bookmark_button.js"
+            charSet="utf-8"
+          />
         </body>
       </Html>
     );
