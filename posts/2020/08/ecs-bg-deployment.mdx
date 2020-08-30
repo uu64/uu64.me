@@ -1,0 +1,169 @@
+---
+title: "CloudFormation による ECS の Blue/Green デプロイを CodePipeline から実行する"
+date: "2020-08-29"
+description: ""
+cover: "./2020/08/codedeploy.png"
+---
+
+今年5月に[AWS CloudFormation による Amazon ECS のブルー/グリーンデプロイ](https://aws.amazon.com/jp/about-aws/whats-new/2020/05/aws-cloudformation-now-supports-blue-green-deployments-for-amazon-ecs/)がサポートされた。
+これの AWS CodePipeline からの実行を試した。
+
+サンプルコードは[こちら](https://github.com/uu64/ecs-bg-deployment-example/tree/master/cloudformation)。
+
+
+## 仕組み
+
+ECS ではローリング更新と Blue/Green デプロイの2種のデプロイ方式がサポートされている。
+（Blue／Greenデプロイについての説明はここでは割愛する。）
+
+ECS の Blue/Green デプロイにおいては AWS CodeDeploy が新旧のコンテナ間のトラフィックをコントロールするのだが、
+以下のセクションを CloudFormation のテンプレートに追加することで、
+変更セット実行時に内部的に AWS CodeDeploy を起動し、Blue／Green デプロイを実行してくれる。
+
+- `AWS::CodeDeployBlueGreen` 変換を呼び出す `Transform` セクション
+- `AWS::CodeDeploy::BlueGreen` フックを呼び出す `Hooks` セクション
+- Blue／Green デプロイをトリガーする ECS リソース
+
+冒頭のサンプルコードから `Transform` セクションと `Hooks` セクションを抜粋したものが以下。
+
+```
+Transform:
+  - 'AWS::CodeDeployBlueGreen'
+Hooks:
+  CodeDeployBlueGreenHook:
+    Properties:
+      TrafficRoutingConfig:
+        Type: TimeBasedCanary
+        TimeBasedCanary:
+          StepPercentage: 15
+          BakeTimeMins: 5
+      Applications:
+        - Target:
+            Type: 'AWS::ECS::Service'
+            LogicalID: ECSDemoService
+          ECSAttributes:
+            TaskDefinitions:
+              - BlueTaskDefinition
+              - GreenTaskDefinition
+            TaskSets:
+              - BlueTaskSet
+              - GreenTaskSet
+            TrafficRouting:
+              ProdTrafficRoute:
+                Type: 'AWS::ElasticLoadBalancingV2::Listener'
+                LogicalID: ALBListenerProdTraffic
+              TargetGroups:
+                - ALBTargetGroupBlue
+                - ALBTargetGroupGreen
+    Type: 'AWS::CodeDeploy::BlueGreen'
+```
+
+注意点として、
+CloudFormation を使用して ECS の Blue/Green デプロイを実行する場合、
+いくつかの考慮事項がある。
+
+例えば、上記の `Hooks` セクションを見ると
+Blue と Green の2つの ECS タスクや、トラッフィックを捌くロードバランサのリスナーが含まれているように、
+1つのテンプレートにこれらのリソースをすべて含めなければならない。
+
+その他にも、クロススタック参照が使えないなどの項目があるため、
+採用時はそれらを許容できるかどうか確認する必要がある。
+
+- [CloudFormation を使用して ECS ブルー/グリーンデプロイメントを管理する際の考慮事項](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/blue-green.html#blue-green-considerations)
+
+
+## やってみた
+
+以下のように AWS CodePipeline 上で変更セットを作成、実行することで
+ECS の Blue/Green デプロイを実行した。
+
+```
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactStore
+      Name: !Ref 'AWS::StackName'
+      RoleArn: !Ref CodePipelineServiceRoleArn
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: Source
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: '1'
+                Provider: CodeCommit
+              OutputArtifacts:
+                - Name: source
+              Configuration:
+                RepositoryName: !Ref RepositoryName
+                BranchName: master
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Build
+              InputArtifacts:
+                - Name: source
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref BuildProject
+              OutputArtifacts:
+                - Name: build
+              RunOrder: 1
+        - Name: CreateChangeSet
+          Actions:
+            - Name: CreateChangeSet
+              InputArtifacts:
+                - Name: build
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CHANGE_SET_REPLACE
+                StackName: !Ref EcsStackName
+                Capabilities: CAPABILITY_AUTO_EXPAND,CAPABILITY_IAM
+                ChangeSetName: update
+                RoleArn: !Ref CloudFormationServiceRoleArn
+                TemplatePath: 'build::cloudformation/ecs.yml'
+                TemplateConfiguration: 'build::cloudformation/stack-config.json'
+        - Name: ExecuteChangeSet
+          Actions:
+            - Name: ExecuteChangeSet
+              InputArtifacts:
+                - Name: build
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: '1'
+                Provider: CloudFormation
+              Configuration:
+                ActionMode: CHANGE_SET_EXECUTE
+                StackName: !Ref EcsStackName
+                Capabilities: CAPABILITY_AUTO_EXPAND,CAPABILITY_IAM
+                ChangeSetName: update
+              RunOrder: 1
+```
+
+Dockerイメージを適当に更新して上記のパイプラインを起動すると、
+以下の通り CodeDeploy による Blue/Green デプロイが実行された。
+
+![codedeploy](/2020/08/codedeploy.png "CodeDeploy によるトラフィック移行の様子。")
+
+## 感想
+
+技術調査の過程で、これまでの CloudFormation を使わない ECS Blue/Green デプロイも試してみたのだけれど、
+[ECS Blue\Green デプロイ用の CodeDeploy リソースの CloudFormation による作成がサポートされていなかったり](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-codedeploy-deploymentgroup.html)、
+ECS 周りのリソース更新が CloudFormation 外で行われるため IaC がやりづらかったり、
+やや使いづらい印象を受けた。
+
+一方で今回サポートされた機能では、
+ECS の作成から更新まですべてを CloudFormation 上で完結できるのが嬉しい。
+考慮事項が許容できるか次第だが、プロダクション環境でも1選択肢として前向きに検討したい。

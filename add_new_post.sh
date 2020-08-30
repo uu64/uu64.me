@@ -5,13 +5,11 @@ if [ $# -ne 1 ]; then
     exit 1
 fi
 
-dirname ${0}
-
 year=$(date "+%Y")
 month=$(date "+%m")
 
 post_path="$(dirname "${0}")/posts/${year}/${month}"
-image_path="/${year}/${month}"
+image_path="$(dirname "${0}")/${year}/${month}"
 title="${1}"
 
 mkdir -p "${post_path}"
