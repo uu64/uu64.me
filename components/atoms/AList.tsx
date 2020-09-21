@@ -11,7 +11,7 @@ interface Props {
 
 const Ul: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <ul className="ml-6">{children}</ul>;
+  return <ul className="ml-6 pb-4">{children}</ul>;
 };
 
 const Li: React.FC<Props> = (props: Props) => {
