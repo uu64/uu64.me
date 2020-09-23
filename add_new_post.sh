@@ -20,7 +20,7 @@ cat << EOF > "${post_path}/${title}.mdx"
 title: "${title}"
 date: "$(date "+%Y-%m-%d")"
 description: ""
-cover: "${image_path}/"
+cover: "/${year}/${month}/"
 ---
 
 ## ${title}
