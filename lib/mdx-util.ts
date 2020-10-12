@@ -23,7 +23,7 @@ const sortDescPost = (a: IPost, b: IPost): number => {
   return 0;
 };
 
-const getPosts = async (): Promise<IPost[]> => {
+const getPosts = async (page?: number): Promise<IPost[]> => {
   const posts: IPost[] = [];
 
   fms.forEach((fm, index) => {
@@ -34,6 +34,12 @@ const getPosts = async (): Promise<IPost[]> => {
       frontMatter: fm,
     });
   });
+  if (page) {
+    // 5 posts per page
+    const start = 5 * (page - 1);
+    const end = start + 5;
+    return posts.sort(sortDescPost).slice(start, end);
+  }
   return posts.sort(sortDescPost);
 };
 
