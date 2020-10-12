@@ -1,4 +1,4 @@
-// cannnot use babel-plugin-impoprt-glob-array and webpack alias together
+// cannot use babel-plugin-impoprt-glob-array and webpack alias together
 import {
   frontMatter as fms,
   _importMeta as metadatas,
