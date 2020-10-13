@@ -7,6 +7,9 @@ describe("App", () => {
   it("renders correctly", async () => {
     const frontMatter: FrontMatter = Array.isArray(fms) ? fms[0] : fms;
     const component = renderer.create(
+      // NOTE:
+      // The following part was copied from pages/blog/[...id].tsx
+      // because dynamic import does not working in test environment
       <TPostsLayout frontMatter={frontMatter} path="/blog/test/sample">
         <MDX />
       </TPostsLayout>
