@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - feature/*
+      - dependabot/*
 
 jobs:
   build:
@@ -26,3 +27,5 @@ jobs:
         run: yarn
       - name: Lint
         run: yarn lint
+      - name: Test
+        run: yarn test
