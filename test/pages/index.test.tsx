@@ -1,8 +1,8 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import mdxUtil from "../../lib/mdx-util";
-import { IPostItem } from "../../components/organisms/OPostList";
-import App from "../../pages/index";
+import mdxUtil from "@/lib/mdx-util";
+import { IPostItem } from "@/components/organisms/OPostList";
+import App from "@/pages/index";
 
 describe("App", () => {
   it("renders correctly", async () => {

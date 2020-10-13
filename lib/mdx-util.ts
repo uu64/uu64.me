@@ -5,6 +5,9 @@ import {
 } from "../posts/**/*.mdx";
 
 const MDX_FILE_ROOT = "/posts/";
+const IGNORE_POSTS_PATTERN = new RegExp(
+  process.env.IGNORE_POSTS_PATTERN ? process.env.IGNORE_POSTS_PATTERN : "^test/"
+);
 
 export interface IPost {
   resourceId: string;
@@ -29,6 +32,11 @@ const getPosts = async (page?: number): Promise<IPost[]> => {
   fms.forEach((fm, index) => {
     const absolutePath = metadatas[index].absolutePath;
     const relativePath = absolutePath.split(MDX_FILE_ROOT).slice(-1)[0];
+
+    if (relativePath.match(IGNORE_POSTS_PATTERN)) {
+      return;
+    }
+
     posts.push({
       resourceId: `${relativePath.split(".").slice(0, -1).join(".")}`,
       frontMatter: fm,

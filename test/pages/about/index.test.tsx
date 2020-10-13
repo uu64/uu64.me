@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import App from "../../../pages/about/index.mdx";
+import App from "@/pages/about/index.mdx";
 
 describe("App", () => {
   it("renders correctly", async () => {
