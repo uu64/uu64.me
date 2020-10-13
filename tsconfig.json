@@ -26,11 +26,10 @@
   },
   "exclude": [
     "node_modules",
-    "**/*.test.ts",
-    "**/*.test.tsx"
+    ".next",
   ],
   "include": [
-    "types/*.d.ts",
+    "**/*.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ]
