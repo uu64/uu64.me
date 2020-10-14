@@ -1,0 +1,156 @@
+---
+title: "Jest を使って Next.js で作ったブログのテストをする"
+date: "2020-10-15"
+description: "Dependabot のアラートに対応するにあたって最低限のテストを書いたというお話"
+cover: "/2020/10/jest.png"
+---
+
+Next.js で作ったこのブログだが、Github の dependabot のアラートがいくつか挙がっていた。
+今後アラートに対応するにあたって最低限のテストはしておきたいので Jest でテストを書いた。
+
+このブログの主な機能は SSG で、各 React コンポーネントが複雑なロジックを持っているわけでもないので、
+最低限各ページのスナップショットテストを行うという方針にした。
+
+## Jest によるスナップショットテスト
+
+実装方法については[公式ドキュメント](https://jestjs.io/docs/en/snapshot-testing)で丁寧に解説されている。
+
+例えば以下のようなページをテストするとする。
+
+```js
+import React from "react";
+import { GetStaticProps } from "next";
+import OPostList, { IPostItem } from "@/components/organisms/OPostList";
+import TIndexLayout from "@/components/templates/TIndexLayout";
+import mdxUtil from "@/lib/mdx-util";
+
+interface Props {
+  posts: IPostItem[];
+}
+
+const PostList: React.FC<Props> = (props: Props) => {
+  const { posts } = props;
+  return (
+    <TIndexLayout>
+      <OPostList posts={posts} />
+    </TIndexLayout>
+  );
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const posts = await mdxUtil.getPosts();
+  return {
+    props: {
+      posts: posts.map(
+        (post): IPostItem => {
+          return {
+            resourceId: post.resourceId,
+            date: post.frontMatter.date,
+            title: post.frontMatter.title,
+          };
+        }
+      ),
+    },
+  };
+};
+
+export default PostList;
+```
+
+テストコードは以下。
+
+SSG 時に呼ばれる `getStaticProps` の処理を実行してやり、
+後は通常の React コンポーネントと同様に `PostList` コンポーネントを配置してやれば良い。
+
+スナップショットは [react-test-renderer](https://ja.reactjs.org/docs/test-renderer.html) の
+`create` を含むテストの初回実行時に自動生成される。
+
+スナップショットも Git で管理してやれば、
+以降スナップショットが変更された際は Git 上でその差分をレビューすることができる。
+
+```js
+import React from "react";
+import renderer from "react-test-renderer";
+import mdxUtil from "@/lib/mdx-util";
+import { IPostItem } from "@/components/organisms/OPostList";
+import App from "@/pages/index";
+
+describe("App", () => {
+  it("renders correctly", async () => {
+    const posts = await mdxUtil.getPosts();
+    const component = renderer.create(
+      <App
+        // Use the 5 oldest posts
+        posts={posts.slice(-5).map(
+          (post): IPostItem => {
+            return {
+              resourceId: post.resourceId,
+              date: post.frontMatter.date,
+              title: post.frontMatter.title,
+            };
+          }
+        )}
+      />
+    );
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+
+```
+
+## dynamic import が jest で動かない問題
+
+ブログ記事のページで [Dynamic Import](https://nextjs.org/docs/advanced-features/dynamic-import) 機能を使っているのだが、
+これが Jest 上で動作しないという問題があった。
+
+公式にも同様の issue が挙がっている。
+
+https://github.com/vercel/next.js/issues/5416
+
+上記 issue にも記載のある通り [jest-next-dynamic](https://github.com/FormidableLabs/jest-next-dynamic) を用いた
+解決を試みたところエラーは消えたのだが、出力されたスナップショットを確認したところ Dynamic Import を用いてインポートした MDX コンポーネントは
+レンダリングされていないようだった。
+
+Jest 上で Dynamic Import の完全な再現は困難という結論に達し、
+Dynamic Import を避けてコンポーネントのレンダリング結果のみをテストするようにした。
+
+以下がテスト対象のコンポーネントとテストの実装。
+
+```js
+...
+// テスト対象のコンポーネント。Dynamic Import を用いている部分を抜粋。
+const Post: React.FC<Props> = (props: Props) => {
+  const { resourceId, frontMatter } = props;
+  const MDX = dynamic(() => import(`@/posts/${resourceId}.mdx`));
+  return (
+    <TPostsLayout frontMatter={frontMatter} path={`/blog/${resourceId}`}>
+      <MDX />
+    </TPostsLayout>
+  );
+};
+...
+```
+
+```js
+...
+// テスト
+describe("App", () => {
+  it("renders correctly", async () => {
+    const frontMatter: FrontMatter = Array.isArray(fms) ? fms[0] : fms;
+    const component = renderer.create(
+      // NOTE:
+      // The following part was copied from pages/blog/[...id].tsx
+      // because dynamic import does not working in test environment
+      <TPostsLayout frontMatter={frontMatter} path="/blog/test/sample">
+        <MDX />
+      </TPostsLayout>
+    );
+    const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+});
+...
+```
+
+ライブラリアップデートなどの更新時に、各ページがこれまで通り描画されていることをテストするには上記で十分だと思う。
