@@ -1,0 +1,56 @@
+---
+title: "Github Actions を使って dotfiles の CI を Ubuntu/macOS 上で実行する"
+date: "2020-11-12"
+description: "ここ最近ちょいちょいやってたdotfilesのメンテが終わった。Github Actionsでmacosとubuntu上でのCI仕込んだから、これでいつでも新PC迎えたり環境移行したりできる！"
+cover: "/2020/11/terminal.png"
+---
+
+dotfiles とはホームディレクトリに置かれたいろいろな設定ファイル (.zshrc とか .vimrc とか) を管理するリポジトリのこと。
+Github で自前の dotfiles を公開しているエンジニアの方も多いだろう。
+
+私も1年ほど前に自前の dotfiles リポジトリを作成して
+各種設定ファイルとそれらの設置スクリプトを用意していたのだが、
+それっきり未メンテという状態で、設置スクリプトはテスト不十分で動かないというありさまだった。
+
+ところで最近家の MacBook Pro の調子が悪くて買い替えを決めた。
+新しい MacBook Pro での環境構築に向けて dotfiles をメンテすることにした。
+
+メンテが完了したリポジトリは[こちら](https://github.com/uu64/dotfiles)。
+
+## 構成
+
+ディレクトリ構成は以下のようになっている。
+
+```
+dotfiles
+├── Dockerfile
+├── LICENSE
+├── Makefile
+├── README.md
+├── deploy.yml
+├── install.yml
+├── inventories
+│   └── localhost.yml
+├── requirements.txt
+├── roles
+│   ├── dotfiles
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── fonts
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── tools
+│   │   └── tasks
+│   │       └── main.yml
+│   ├── vim
+│   │   └── tasks
+│   │       └── main.yml
+│   └── zsh
+│       └── tasks
+│           └── main.yml
+└── tests
+    ├── deploy.bats
+    └── install.bats
+```
+
+
