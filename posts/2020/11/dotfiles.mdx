@@ -17,40 +17,152 @@ Github で自前の dotfiles を公開しているエンジニアの方も多い
 
 メンテが完了したリポジトリは[こちら](https://github.com/uu64/dotfiles)。
 
-## 構成
+## Ansible による構成管理
 
-ディレクトリ構成は以下のようになっている。
+これまでは shellscript で zsh や neovim のインストールスクリプトを用意していたが、
+仕事で Ansible を触っていることもあり、Ansible による構成管理に切り替えることにした。
 
+Ansible のタスクを実装するにあたっては冪等性を意識した。
+以下は zsh をインストールする例。
+
+Ansible の apt モジュールのように対象がインストール済みか判定する機能があればそれを利用し、
+apt などでインストールできない場合は stat モジュールなどを使って自前でインストール済みかチェックをしている。
+
+```yaml
+- name: Install zsh and zplug dependencies using apt
+  become: yes
+  apt:
+    pkg:
+      - gawk
+      - zsh
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: Check zplug existence
+  stat:
+    path: ~/.zplug
+  register: zplug
+
+- block:
+    - name: Download zplug installer
+      get_url:
+        url: https://raw.githubusercontent.com/zplug/installer/master/installer.zsh
+        dest: /tmp/zplug_installer.zsh
+
+    - name: Install zplug
+      command: zsh /tmp/zplug_installer.zsh
+
+  when: not zplug.stat.exists
 ```
-dotfiles
-├── Dockerfile
-├── LICENSE
-├── Makefile
-├── README.md
-├── deploy.yml
-├── install.yml
-├── inventories
-│   └── localhost.yml
-├── requirements.txt
-├── roles
-│   ├── dotfiles
-│   │   └── tasks
-│   │       └── main.yml
-│   ├── fonts
-│   │   └── tasks
-│   │       └── main.yml
-│   ├── tools
-│   │   └── tasks
-│   │       └── main.yml
-│   ├── vim
-│   │   └── tasks
-│   │       └── main.yml
-│   └── zsh
-│       └── tasks
-│           └── main.yml
-└── tests
-    ├── deploy.bats
-    └── install.bats
+
+各設定ファイルの設置も ansible で実行するようにした。
+
+```yaml
+- name: Create dotfiles symbolic links
+  file:
+    src: "{{ playbook_dir }}/{{ item.name }}"
+    dest: "{{ item.dest }}"
+    state: link
+  loop:
+    - { name: .zshrc, dest: ~/.zshrc }
+    - { name: .zshenv, dest: ~/.zshenv }
+    - { name: .vimrc, dest: ~/.vimrc }
+    - { name: .vimrc, dest: ~/.config/nvim/init.vim }
+    - { name: .tmux.conf, dest: ~/.tmux.conf }
 ```
 
 
+## Github Actions による CI
+
+テストは bash ベースのテストフレームワークである [bats](https://github.com/sstephenson/bats)
+を利用することにした。
+
+Jest などのよくあるテストフレームワークのような書き味でテストを実装することができる。
+
+```bash
+#!/usr/bin/env bats
+
+@test ".zshrc is present" {
+  run ls ~/.zshrc
+  [ "${status}" -eq 0 ]
+}
+```
+
+Github Actions では上記のようなテストと、
+ansible-lint と shellcheck による静的解析を macOS と Ubuntu 上でそれぞれ実行している。
+
+```yaml
+name: macos
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+      - dependabot/*
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+          architecture: x64
+      - name: Prerequisites
+        run: |
+          pip install -r requirements.txt
+          git clone https://github.com/sstephenson/bats.git && sudo bats/install.sh /usr/local
+      - name: Install
+        run: |
+          make install
+      - name: Deploy
+        run: |
+          make deploy
+      - name: Test
+        run: |
+          make test
+      - name: Lint
+        run: |
+          make lint
+```
+
+また、push する前にローカルで CI が通るか確認したかったため、
+ローカルにクリーンな docker コンテナを用意し、
+コンテナ上で ansible による各ツールのインストールや設定ファイルの設置を実行した後、
+各種テストや静的解析を実行するようにした。
+
+ローカルで Github Actions をエミュレートする [act](https://github.com/nektos/act) というツールも見つけたのだが、
+dotfiles リポジトリ自体の依存のダウンロード処理（上記 yaml の `Prerequisites` の部分）に毎回数分かかりストレスがたまるため、
+以下のように依存を予めインストールした docker コンテナ上で確認する方式を採用した。
+
+```bash
+FROM ubuntu:20.04
+
+RUN apt update && apt install -y \
+  aptitude \
+  git \
+  make \
+  python3.8 \
+  python3-apt \
+  python3-pip \
+  sudo \
+&& rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/sstephenson/bats.git \
+&& bats/install.sh /usr/local \
+&& rm -rf bats
+
+COPY requirements.txt ./
+RUN python3 -m pip install -r requirements.txt
+```
+
+
+# 感想
+
+早速上記を使って、会社で使っている WSL2 の Ubuntu 上に環境構築をした。
+毎回同じ方法で環境構築できるのは非常に安心感がある。
+
+今後は設定ファイル自体の見直しをしてゆきたい。
