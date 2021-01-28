@@ -21,7 +21,183 @@ IFTTTとLINE Messaging APIを使ってRoombaからの通知受信＆掃除依頼
 各種通知が妻に届かないと不便な時があるので、
 最近勉強中のGoと前から気になっていたIFTTTを使ってRoombaをLINE Bot化することにした。
 
-## LINE Botの作り方
+
+## IFTTTのセットアップ
+
+[IFTTT](https://ifttt.com)とは "if this then that" （こうなったらこうする）の略で、
+様々なサービスによるイベントをトリガーとして別のサービスを呼び出すことができるサービス連携プラットフォーム。
+
+IFTTTの無料プランでは上記のトリガーを最大3つまで作成することができる。
+今回はLINE Botのために以下3つのトリガーを作成する。
+
+- Roombaが掃除を完了する → WebhookでLINE Botサーバーに通知する（LINE Botサーバー上で掃除完了をユーザーに通知する）
+- Roombaが異常終了する → WebhookでLINE Botサーバーに通知する（LINE Botサーバー上で異常終了をユーザーに通知する）
+- LINE BotサーバーからWebhookを受け取る → Roombaに掃除開始を指示する
+
+上記のトリガーはIFTTTはブラウザ上からGUI操作で作成できる。
+スクリーンショット付きで作成方法を解説しているサイトもたくさんあるので作成手順の詳細は割愛。
+
+以下は作成したトリガーの例。
+
+![ifttt](/2021/01/ifttt.png)
 
 
+## LINE Botの実装
+
+LINE Botを作成する手順はざっくりと以下の通り。
+
+- LINE DevelopersコンソールでBot用のチャネルを作成する
+- Botをホストするサーバーを用意する
+
+上記手順1のチャネルがLINEのBotアカウントに相当する。
+ユーザーとBotアカウント間で発生するイベント（友達追加やメッセージのやりとり）はチャネルを介してWebhookとしてBotサーバーに通知される。
+
+BotサーバーではLINE Messaging APIを用いて受け取ったイベントのパースやユーザーに対するメッセージ送信などのアクションを実行する。
+
+
+チャネルのセットアップについては[公式のドキュメント](https://developers.line.biz/ja/docs/messaging-api/getting-started/)で
+丁寧に解説されているためそちらを参照いただきたい。
+
+Botの実装例は以下の通り。
+ユーザーのメッセージに定型文が含まれていたら外部のAPI（今回はIFTTT）呼ぶとか、
+ユーザーにLINE上でメッセージを返すくらいであればサクッと実装できた。トータル200行くらい。
+
+```go
+// 細かいエラー処理は省略。詳細はGithubを参照。
+
+func init() {
+	// logging setting
+	logger = newLogger()
+
+	// line bot settings
+	var err error
+	token := os.Getenv("LINE_BOT_TOKEN")
+	secret := os.Getenv("LINE_BOT_SECRET")
+	bot, err = linebot.New(secret, token)
+	if err != nil {
+		logger.error(fmt.Sprintf("%+v", err))
+		os.Exit(1)
+	}
+}
+
+func push(text string) error {
+	to := os.Getenv("LINE_BOT_PRIVATE_ID")
+	message := linebot.NewTextMessage(text)
+	if _, err := bot.PushMessage(to, message).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func reply(text string, replyToken string) error {
+	message := linebot.NewTextMessage(text)
+	if _, err := bot.ReplyMessage(replyToken, message).Do(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func callRoomba(eventName string) error {
+	var endpoint = "https://maker.ifttt.com/trigger"
+
+	u, err := url.Parse(endpoint)
+	if err != nil {
+		return err
+	}
+
+	iftttKey := os.Getenv("IFTTT_KEY")
+	u.Path = path.Join(u.Path, eventName, "with", "key", iftttKey)
+	if _, err := http.Get(u.String()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func iftttHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/bot/ifttt" {
+		http.NotFound(w, r)
+		logger.error("invalid path")
+		return
+	}
+
+	// 中略
+
+	var body iftttReqBody
+	if err = json.Unmarshal(b, &body); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		logger.error(fmt.Sprintf("failed to unmarshal: %+v", err))
+		return
+	}
+
+	if body.Event == "finish-cleaning" {
+		if err := push("掃除おわった"); err != nil {
+			logger.error(fmt.Sprintf("failed to send a push messsage: %+v", err))
+		}
+	}
+}
+
+func webhookHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/bot/webhook" {
+		http.NotFound(w, r)
+		logger.error("invalid path")
+		return
+	}
+
+	// 中略
+
+	for _, event := range events {
+		if event.Type == linebot.EventTypeMessage {
+			switch message := event.Message.(type) {
+			case *linebot.TextMessage:
+				nicknames := []string{
+					"ルンちゃん",
+					"ルンさん",
+				}
+				for _, nickname := range nicknames {
+					if strings.Contains(message.Text, nickname) {
+						if err := reply("ほい？", event.ReplyToken); err != nil {
+							logger.error(fmt.Sprintf("failed to send a reply messsage: %+v", err))
+						}
+						return
+					}
+				}
+			}
+		}
+	}
+}
+
+func main() {
+	// initialize handler
+	http.HandleFunc("/bot/webhook", webhookHandler)
+	http.HandleFunc("/bot/ifttt", iftttHandler)
+
+	// initialize server
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+		logger.info(fmt.Sprintf("Defaulting to port %s", port))
+	}
+
+	logger.info(fmt.Sprintf("Listening on port %s", port))
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		logger.error(fmt.Sprintf("%+v", err))
+		os.Exit(1)
+	}
+}
+```
+
+Botは前から触ってみたかったGoogle App Engine上でホストすることにした。
+一番小さいインスタンスタイプ1台で運用すれば、仮に24時間1ヶ月稼働してても十分無料枠に収まる。
+1コマンドでデプロイもできてとても手軽でよい。
+
+## 感想
+
+作成したBotは簡単なレスポンスしか返していないけれど、
+LINE上でやりとりできるだけで愛着を1割増しくらいで感じるので不思議なものである。
+
+実装をはじめて気づいたのだけれど、LINE Botは基本的に企業の公式アカウントのようなビジネスユースのみが想定されているようで、非公開のBotを作成することはできない。（アカウント認証をしなければLINE上でのアカウント検索などには表示されないようなので、
+見知らぬ誰かが使うことはないとは思うが。）
+
+LINE上でRoombaとやり取りできるのはそれはそれで面白いのだけど、
+プライベート用途だったら家庭用Slackチャネルとかを作ってそっちに通知したほうがよいのかもしれない。
 
