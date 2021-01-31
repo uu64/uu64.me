@@ -2,8 +2,8 @@ import React from "react";
 
 interface Props {
   src: string;
-  title: string;
   alt: string;
+  title?: string;
 }
 
 const AImage: React.FC<Props> = (props: Props) => {
