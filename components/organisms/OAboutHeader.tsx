@@ -3,7 +3,7 @@ import siteconfig from "@/siteconfig.json";
 
 const OAboutHeader: React.FC = () => {
   return (
-    <div className="py-8">
+    <div className="pt-8 pb-2">
       <h1 className="font-semibold text-3xl text-custom-normal">
         {siteconfig.pages.about.title}
       </h1>
