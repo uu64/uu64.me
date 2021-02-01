@@ -11,12 +11,12 @@ interface Props {
 
 const Ul: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <ul className="ml-6 pb-4">{children}</ul>;
+  return <ul className="ml-6">{children}</ul>;
 };
 
 const Li: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <li className="list-disc pb-2">{children}</li>;
+  return <li className="list-disc">{children}</li>;
 };
 
 const AList: React.FC<Props> & AList = () => null;
