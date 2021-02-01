@@ -5,7 +5,7 @@ exports[`App renders correctly 1`] = `
   className="about-content px-8"
 >
   <div
-    className="py-8"
+    className="pt-8 pb-2"
   >
     <h1
       className="font-semibold text-3xl text-custom-normal"
@@ -19,17 +19,50 @@ exports[`App renders correctly 1`] = `
     </p>
   </div>
   <h3
-    className="py-4 font-semibold"
+    className="pt-8 pb-4 font-semibold"
+  >
+    筆者について
+  </h3>
+  <div
+    className="flex justify-center"
+  >
+    <img
+      alt="profile"
+      className="rounded-full p-4"
+      src="icon.jpg"
+      style={
+        Object {
+          "height": 130,
+          "width": 130,
+        }
+      }
+    />
+  </div>
+  <h2
+    className="text-center font-bold pb-4"
+  >
+    uu
+  </h2>
+  <p>
+    某メーカーのソフトウェアエンジニア。
+    <br />
+    最近の仕事では AWS CloudFormation を活用した IaC や CI/CD パイプラインの実装を担当することが多い。
+    <br />
+    <br />
+    主な技術スタック： JavaScript, Java, Amazon Web Services, Git, Linux
+  </p>
+  <h3
+    className="pt-8 pb-4 font-semibold"
   >
     アクセス解析について
   </h3>
   <p
-    className="leading-relaxed pb-4"
+    className="leading-relaxed"
   >
     このサイトでは、コンテンツの分析と改善を目的としてGoogle Analyticsを利用しています。
   </p>
   <p
-    className="leading-relaxed pb-4"
+    className="leading-relaxed"
   >
     Google Analyticsはトラフィックデータの収集のためにCookieを使用しています。
 このトラフィックデータは匿名で収集されており、個人を特定するものではありません。

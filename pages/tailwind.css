@@ -34,7 +34,7 @@ a:hover {
   @apply underline;
 }
 
-p+p, ul+p, pre+p {
+p+p, ul+p, pre+p, div+p {
   @apply pt-6;
 }
 
