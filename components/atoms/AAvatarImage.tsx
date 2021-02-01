@@ -11,7 +11,7 @@ const AAvatarImage: React.FC<Props> = (props: Props) => {
   const style = {
     width,
     height: width,
-  }
+  };
   return (
     <>
       <img className="rounded-full p-4" style={style} src={src} alt={alt} />
