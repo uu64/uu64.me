@@ -9,7 +9,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <>
       <OGlobalHeader />
-      <div className="app-main bg-custom-light">
+      <div className="app-main">
         <div className="mx-auto max-w-2xl py-8">
           <Component {...pageProps} />
         </div>

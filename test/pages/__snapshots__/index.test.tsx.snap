@@ -5,123 +5,93 @@ exports[`App renders correctly 1`] = `
   className="blog-index-content px-8"
 >
   <div
-    className="py-8"
+    className="py-8 flex justify-center"
   >
     <h1
-      className="font-semibold text-3xl text-custom-normal"
+      className="text-3xl text-custom-frost1 pb-4 border-b-2 border-custom-aurora4"
     >
-      uu64.me
+      BLOG
     </h1>
-    <p
-      className="border-b-2 border-gray-400 py-2 text-sm"
-    >
-      技術的な活動の記録など。
-    </p>
   </div>
   <ul>
     <li>
       <div
-        className="py-4"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
       >
         <p
-          className="py-2"
+          className="pb-2 text-custom-night3"
         >
           2020-07-19
         </p>
-        <a
-          className="font-semibold text-custom-normal"
-          href="/blog/2020/07/unix-philosophy"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <h2>
-            『UNIXという考え方 その設計思想と哲学』を読んで
-          </h2>
-        </a>
+        <h2>
+          『UNIXという考え方 その設計思想と哲学』を読んで
+        </h2>
       </div>
     </li>
     <li>
       <div
-        className="py-4"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
       >
         <p
-          className="py-2"
+          className="pb-2 text-custom-night3"
         >
           2020-07-04
         </p>
-        <a
-          className="font-semibold text-custom-normal"
-          href="/blog/2020/07/renew-blog"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <h2>
-            Next.js + TypeScript + MDXでブログシステムを構築した
-          </h2>
-        </a>
+        <h2>
+          Next.js + TypeScript + MDXでブログシステムを構築した
+        </h2>
       </div>
     </li>
     <li>
       <div
-        className="py-4"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
       >
         <p
-          className="py-2"
+          className="pb-2 text-custom-night3"
         >
           2020-05-13
         </p>
-        <a
-          className="font-semibold text-custom-normal"
-          href="/blog/2020/05/serverless-singlepage-application"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <h2>
-            O'REILLY サーバーレスシングルページアプリケーション を読んで
-          </h2>
-        </a>
+        <h2>
+          O'REILLY サーバーレスシングルページアプリケーション を読んで
+        </h2>
       </div>
     </li>
     <li>
       <div
-        className="py-4"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
       >
         <p
-          className="py-2"
+          className="pb-2 text-custom-night3"
         >
           2019-08-27
         </p>
-        <a
-          className="font-semibold text-custom-normal"
-          href="/blog/2019/08/ionic-tutorial"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <h2>
-            Ionicのチュートリアルをやってみた
-          </h2>
-        </a>
+        <h2>
+          Ionicのチュートリアルをやってみた
+        </h2>
       </div>
     </li>
     <li>
       <div
-        className="py-4"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
       >
         <p
-          className="py-2"
+          className="pb-2 text-custom-night3"
         >
           2019-08-13
         </p>
-        <a
-          className="font-semibold text-custom-normal"
-          href="/blog/2019/08/new-blog"
-          onClick={[Function]}
-          onMouseEnter={[Function]}
-        >
-          <h2>
-            ブログを引っ越しました
-          </h2>
-        </a>
+        <h2>
+          ブログを引っ越しました
+        </h2>
       </div>
     </li>
   </ul>

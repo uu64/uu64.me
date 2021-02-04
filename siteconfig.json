@@ -1,14 +1,14 @@
 {
   "url": "https://uu64.me",
   "name": "uu64.me",
-  "copyright": "© 2019 uu64",
+  "copyright": "© 2019 uu",
   "pages": {
     "blog": {
-      "title": "uu64.me",
+      "title": "BLOG",
       "description": "技術的な活動の記録など。"
     },
     "about": {
-      "title": "About",
+      "title": "ABOUT",
       "description": "このサイトについて"
     }
   },

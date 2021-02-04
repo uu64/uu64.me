@@ -101,7 +101,7 @@ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     className="leading-relaxed"
   >
     <a
-      className="text-custom-normal"
+      className="text-custom-frost1 hover:underline"
       href="https://google.com"
       rel="noopener noreferrer"
       target="_blank"

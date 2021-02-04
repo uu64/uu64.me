@@ -5,7 +5,7 @@ import siteconfig from "@/siteconfig.json";
 const ALogo: React.FC = () => {
   return (
     <Link href="/">
-      <span className="font-logo">
+      <span className="font-logo text-2xl hover:text-custom-frost1">
         <a>{siteconfig.name}</a>
       </span>
     </Link>

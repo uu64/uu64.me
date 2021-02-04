@@ -31,7 +31,7 @@ module.exports = {
     },
     fontFamily: {
       ...fontFamily,
-      logo: ["Montserrat", "san-serif"],
+      logo: ["Homemade Apple", "san-serif"],
     },
     screens: {
       sm: "640px",

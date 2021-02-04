@@ -3,13 +3,10 @@ import siteconfig from "@/siteconfig.json";
 
 const OIndexHeader: React.FC = () => {
   return (
-    <div className="py-8">
-      <h1 className="font-semibold text-3xl text-custom-normal">
+    <div className="py-8 flex justify-center">
+      <h1 className="text-3xl text-custom-frost1 pb-4 border-b-2 border-custom-aurora4">
         {siteconfig.pages.blog.title}
       </h1>
-      <p className="border-b-2 border-gray-400 py-2 text-sm">
-        {siteconfig.pages.blog.description}
-      </p>
     </div>
   );
 };

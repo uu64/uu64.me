@@ -10,7 +10,7 @@ const ALink: React.FC<Props> = (props: Props) => {
   return (
     <>
       <a
-        className="text-custom-normal"
+        className="text-custom-frost1 hover:underline"
         href={href}
         rel="noopener noreferrer"
         target="_blank"

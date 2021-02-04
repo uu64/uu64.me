@@ -5,18 +5,13 @@ exports[`App renders correctly 1`] = `
   className="about-content px-8"
 >
   <div
-    className="pt-8 pb-2"
+    className="py-8 flex justify-center"
   >
     <h1
-      className="font-semibold text-3xl text-custom-normal"
+      className="text-3xl text-custom-frost1 pb-4 border-b-2 border-custom-aurora4"
     >
-      About
+      ABOUT
     </h1>
-    <p
-      className="border-b-2 border-gray-400 py-2 text-sm"
-    >
-      このサイトについて
-    </p>
   </div>
   <h3
     className="pt-8 pb-4 font-semibold"
@@ -69,7 +64,7 @@ exports[`App renders correctly 1`] = `
 詳細については
 
     <a
-      className="text-custom-normal"
+      className="text-custom-frost1 hover:underline"
       href="https://www.google.com/intl/ja/policies/privacy/partners/"
       rel="noopener noreferrer"
       target="_blank"
