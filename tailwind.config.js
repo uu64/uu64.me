@@ -6,10 +6,6 @@ module.exports = {
     colors: {
       ...colors,
       custom: {
-        dark: "#163172",
-        normal: "#1e56a0",
-        light: "#f8f8ff",
-        white: "#f6f6f6",
         // Nord Color Pallets
         // https://www.nordtheme.com/
         night0: "#2e3440",
@@ -22,6 +18,7 @@ module.exports = {
         frost0: "#8fbcbb",
         frost1: "#88c0d0",
         frost2: "#81a1c1",
+        frost3: "#5e81ac",
         aurora0: "#bf616a",
         aurora1: "#d08770",
         aurora2: "#ebcb8b",

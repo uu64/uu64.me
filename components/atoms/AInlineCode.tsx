@@ -9,7 +9,7 @@ const AInlineCode: React.FC<Props> = (props: Props) => {
   const inlineCodeSpacingStyle = { padding: "0.2em 0.4em" };
   return (
     <span
-      className="bg-gray-200 font-mono text-sm rounded"
+      className="bg-custom-night3 text-custom-snow0 font-mono text-sm rounded"
       style={inlineCodeSpacingStyle}
     >
       {children}

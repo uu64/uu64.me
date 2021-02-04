@@ -7,9 +7,9 @@ interface Props {
 const OPostHeader: React.FC<Props> = (props: Props) => {
   const { frontMatter } = props;
   return (
-    <div className="pt-8 pb-2">
-      <div>{frontMatter.date}</div>
-      <h1 className="border-b-2 border-gray-400 font-semibold text-custom-normal py-2">
+    <div className="py-8">
+      <div className="pb-2 text-custom-night3">{frontMatter.date}</div>
+      <h1 className="text-3xl text-custom-frost1 pb-4 border-b-2 border-custom-aurora4">
         {frontMatter.title}
       </h1>
     </div>

@@ -10,7 +10,7 @@ const MyApp: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
     <>
       <OGlobalHeader />
       <div className="app-main">
-        <div className="mx-auto max-w-2xl py-8">
+        <div className="mx-auto max-w-screen-md py-8">
           <Component {...pageProps} />
         </div>
       </div>

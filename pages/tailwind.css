@@ -39,19 +39,19 @@ a:hover {
 }
 
 p+p, ul+p, pre+p, div+p {
-  @apply pt-6;
+  @apply mt-6;
 }
 
 ul+ul, p+ul, pre+ul {
-  @apply pt-6;
+  @apply mt-6;
 }
 
 pre+pre, p+pre, ul+pre {
-  @apply pt-2;
+  @apply mt-2;
 }
 
 li+li {
-  @apply pt-2;
+  @apply mt-2;
 }
 /* purgecss end ignore */
 
