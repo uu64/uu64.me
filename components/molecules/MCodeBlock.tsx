@@ -21,7 +21,7 @@ const MCodeBlock: React.FC<Props> = ({ children, className }: Props) => {
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
-          className={`${className} font-mono overflow-x-auto my-4 p-4 text-sm`}
+          className={`${className} font-mono overflow-x-auto -mx-8 my-4 p-4 text-sm`}
           style={style}
         >
           {tokens.map((line, i) => (
