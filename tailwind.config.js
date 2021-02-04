@@ -3,6 +3,9 @@ const { colors, fontFamily } = require("tailwindcss/defaultTheme");
 module.exports = {
   purge: ["./components/**/*.tsx", "./pages/**/*.tsx"],
   theme: {
+    fill: (theme) => ({
+      night1: theme("colors.custom.night1"),
+    }),
     colors: {
       ...colors,
       custom: {
