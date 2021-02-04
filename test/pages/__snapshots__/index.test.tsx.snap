@@ -16,7 +16,7 @@ exports[`App renders correctly 1`] = `
   <ul>
     <li>
       <div
-        className="p-4 cursor-pointer rounded-xl hover:bg-custom-night1"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
@@ -32,7 +32,7 @@ exports[`App renders correctly 1`] = `
     </li>
     <li>
       <div
-        className="p-4 cursor-pointer rounded-xl hover:bg-custom-night1"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
@@ -48,7 +48,7 @@ exports[`App renders correctly 1`] = `
     </li>
     <li>
       <div
-        className="p-4 cursor-pointer rounded-xl hover:bg-custom-night1"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
@@ -64,7 +64,7 @@ exports[`App renders correctly 1`] = `
     </li>
     <li>
       <div
-        className="p-4 cursor-pointer rounded-xl hover:bg-custom-night1"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
@@ -80,7 +80,7 @@ exports[`App renders correctly 1`] = `
     </li>
     <li>
       <div
-        className="p-4 cursor-pointer rounded-xl hover:bg-custom-night1"
+        className="p-4 cursor-pointer hover:bg-custom-night1"
         onClick={[Function]}
         onMouseEnter={[Function]}
       >
