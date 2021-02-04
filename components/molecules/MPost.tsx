@@ -10,14 +10,12 @@ interface Props {
 const MPost: React.FC<Props> = (props: Props) => {
   const { resourceId, date, title } = props;
   return (
-    <div className="py-4">
-      <p className="py-2">{date}</p>
-      <ANextLink href="/blog/[...id]" as={`/blog/${resourceId}`}>
-        <a className="font-semibold text-custom-normal">
-          <h2>{title}</h2>
-        </a>
-      </ANextLink>
-    </div>
+    <ANextLink href="/blog/[...id]" as={`/blog/${resourceId}`}>
+      <div className="p-4 cursor-pointer hover:bg-custom-night1">
+        <p className="pb-2 text-custom-night3">{date}</p>
+        <h2>{title}</h2>
+      </div>
+    </ANextLink>
   );
 };
 

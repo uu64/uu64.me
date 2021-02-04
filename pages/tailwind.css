@@ -13,6 +13,11 @@
   }
 }
 
+html {
+  @apply text-custom-snow2;
+  @apply bg-custom-night0;
+}
+
 h1 {
   @apply text-2xl;
 }
@@ -31,7 +36,6 @@ h4 {
 
 a:hover {
   @apply cursor-pointer;
-  @apply underline;
 }
 
 p+p, ul+p, pre+p, div+p {

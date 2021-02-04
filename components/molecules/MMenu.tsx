@@ -7,7 +7,9 @@ const MMenu: React.FC = () => {
     <ul>
       <li>
         <ANextLink href="/about">
-          <a>{siteconfig.pages.about.title}</a>
+          <a className="hover:text-custom-frost1">
+            {siteconfig.pages.about.title}
+          </a>
         </ANextLink>
       </li>
     </ul>
