@@ -5,7 +5,7 @@ exports[`App renders correctly 1`] = `
   className="blog-post-content px-8"
 >
   <div
-    className="bg-custom-night1 p-8 rounded-md"
+    className="bg-custom-night1 p-8 rounded-xl"
   >
     <div
       className="py-8"

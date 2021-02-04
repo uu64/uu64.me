@@ -45,7 +45,7 @@ const TPostsLayout: React.FC<Props> = (props: Props) => {
         coverImageUrl={`${siteconfig.url}${frontMatter.cover}`}
         pageType="article"
       />
-      <div className="bg-custom-night1 p-8 rounded-md">
+      <div className="bg-custom-night1 p-8 rounded-xl">
         <OPostHeader frontMatter={frontMatter} />
         <MDXProvider components={state}>{children}</MDXProvider>
       </div>
