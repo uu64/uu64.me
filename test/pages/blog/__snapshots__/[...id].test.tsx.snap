@@ -146,7 +146,7 @@ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </p>
     <pre>
       <pre
-        className="prism-code language-bash font-mono overflow-x-auto my-4 p-4 text-sm"
+        className="prism-code language-bash font-mono overflow-x-auto -mx-8 my-4 p-4 text-sm"
         style={
           Object {
             "backgroundColor": "#292d3e",
