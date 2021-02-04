@@ -14,7 +14,7 @@ exports[`App renders correctly 1`] = `
     </h1>
   </div>
   <h3
-    className="pt-8 pb-4 font-semibold"
+    className="pt-12 text-custom-frost1 pb-4 font-bold"
   >
     筆者について
   </h3>
@@ -47,7 +47,7 @@ exports[`App renders correctly 1`] = `
     主な技術スタック： JavaScript, Java, Amazon Web Services, Git, Linux
   </p>
   <h3
-    className="pt-8 pb-4 font-semibold"
+    className="pt-12 text-custom-frost1 pb-4 font-bold"
   >
     アクセス解析について
   </h3>

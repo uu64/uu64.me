@@ -14,27 +14,31 @@ interface Props {
 
 const H1: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h1 className="py-12 font-semibold">{children}</h1>;
+  return <h1 className="py-12 text-custom-frost1 font-bold">{children}</h1>;
 };
 
 const H2: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h2 className="pt-12 pb-4 font-semibold">{children}</h2>;
+  return (
+    <h2 className="pt-12 text-custom-frost1 pb-4 font-bold">{children}</h2>
+  );
 };
 
 const H3: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h3 className="pt-8 pb-4 font-semibold">{children}</h3>;
+  return (
+    <h3 className="pt-12 text-custom-frost1 pb-4 font-bold">{children}</h3>
+  );
 };
 
 const H4: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h4 className="py-4 font-semibold">{children}</h4>;
+  return <h4 className="py-8 text-custom-frost1 font-bold">{children}</h4>;
 };
 
 const H5: React.FC<Props> = (props: Props) => {
   const { children } = props;
-  return <h5 className="py-4 font-semibold">{children}</h5>;
+  return <h5 className="py-8 text-custom-frost1 font-bold">{children}</h5>;
 };
 
 const ABlogHeading: React.FC<Props> & ABlogHeading = () => null;

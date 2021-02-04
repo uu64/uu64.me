@@ -1,5 +1,6 @@
 import React from "react";
 import Highlight, { defaultProps, Language } from "prism-react-renderer";
+import palenight from "prism-react-renderer/themes/palenight";
 
 interface Props {
   className: string;
@@ -16,6 +17,7 @@ const MCodeBlock: React.FC<Props> = ({ children, className }: Props) => {
       {...defaultProps}
       code={children}
       language={language as Language}
+      theme={palenight}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <pre
