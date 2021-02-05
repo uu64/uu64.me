@@ -3,7 +3,7 @@ import siteconfig from "@/siteconfig.json";
 import styled from "styled-components";
 
 const Svg = styled.svg`
-  margin: -1px;
+  margin-bottom: -1px;
 `;
 
 const OFooter: React.FC = () => {
