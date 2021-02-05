@@ -3,7 +3,7 @@ import styled from "styled-components";
 import siteconfig from "@/siteconfig.json";
 
 const Svg = styled.svg`
-  bottom: -1px;
+  bottom: -3px;
 `;
 
 const OFooter: React.FC = () => {
