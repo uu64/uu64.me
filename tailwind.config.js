@@ -6,6 +6,9 @@ module.exports = {
     fill: (theme) => ({
       night1: theme("colors.custom.night1"),
     }),
+    fill: (theme) => ({
+      night1: theme("colors.custom.night1"),
+    }),
     colors: {
       ...colors,
       custom: {

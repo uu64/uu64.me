@@ -12,7 +12,7 @@ const TIndexLayout: React.FC<Props> = (props: Props) => {
   return (
     <div className="blog-index-content px-8">
       <MHead
-        title={siteconfig.pages.blog.title}
+        title={`${siteconfig.pages.blog.title} | ${siteconfig.name}`}
         description={siteconfig.pages.blog.description}
         pageUrl={siteconfig.url}
         coverImageUrl={`${siteconfig.url}/icon.jpg`}
