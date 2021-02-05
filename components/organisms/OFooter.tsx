@@ -5,7 +5,7 @@ const OFooter: React.FC = () => {
   return (
     <>
       <svg
-        className="pt-12 fill-night1"
+        className="pt-12 fill-night1 stroke-night1"
         version="1.1"
         viewBox="0 0 1228 80.448"
         xmlns="http://www.w3.org/2000/svg"
