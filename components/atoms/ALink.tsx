@@ -3,10 +3,11 @@ import React from "react";
 interface Props {
   href: string;
   children: React.ReactNode;
+  ariaLabel?: string;
 }
 
 const ALink: React.FC<Props> = (props: Props) => {
-  const { href, children } = props;
+  const { href, children, ariaLabel } = props;
   return (
     <>
       <a
@@ -14,6 +15,7 @@ const ALink: React.FC<Props> = (props: Props) => {
         href={href}
         rel="noopener noreferrer"
         target="_blank"
+        aria-label={ariaLabel}
       >
         {children}
       </a>

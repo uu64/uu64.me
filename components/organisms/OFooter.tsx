@@ -25,12 +25,12 @@ const OFooter: React.FC = () => {
       <div className="bg-custom-night1 text-center pt-4 pb-8">
         <div className="flex justify-center py-4">
           <span className="px-2">
-            <ALink href={siteconfig.author.github.url}>
+            <ALink href={siteconfig.author.github.url} ariaLabel="github">
               <AIcon.Github className="w-8 fill-snow0" />
             </ALink>
           </span>
           <span className="px-2">
-            <ALink href={siteconfig.author.twitter.url}>
+            <ALink href={siteconfig.author.twitter.url} ariaLabel="twitter">
               <AIcon.Twitter className="w-8 fill-snow0" />
             </ALink>
           </span>
