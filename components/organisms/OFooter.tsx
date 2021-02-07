@@ -1,4 +1,6 @@
 import React from "react";
+import AIcon from "@/components/atoms/AIcon";
+import ALink from "@/components/atoms/ALink";
 import siteconfig from "@/siteconfig.json";
 import styled from "styled-components";
 
@@ -21,6 +23,18 @@ const OFooter: React.FC = () => {
         />
       </Svg>
       <div className="bg-custom-night1 text-center pt-4 pb-8">
+        <div className="flex justify-center py-4">
+          <span className="px-2">
+            <ALink href={siteconfig.author.github.url}>
+              <AIcon.Github className="w-8 fill-snow0" />
+            </ALink>
+          </span>
+          <span className="px-2">
+            <ALink href={siteconfig.author.twitter.url}>
+              <AIcon.Twitter className="w-8 fill-snow0" />
+            </ALink>
+          </span>
+        </div>
         {siteconfig.copyright}
       </div>
     </>

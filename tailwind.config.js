@@ -5,6 +5,7 @@ module.exports = {
   theme: {
     fill: (theme) => ({
       night1: theme("colors.custom.night1"),
+      snow0: theme("colors.custom.snow0"),
     }),
     stroke: (theme) => ({
       night1: theme("colors.custom.night1"),
