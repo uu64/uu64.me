@@ -14,7 +14,11 @@
   },
   "author": {
     "twitter": {
-      "id": "@_uu64"
+      "id": "@_uu64",
+      "url": "https://twitter.com/_uu64"
+    },
+    "github": {
+      "url": "https://github.com/uu64"
     }
   }
 }
