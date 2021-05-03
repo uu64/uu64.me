@@ -5,21 +5,158 @@ description: "AWS SAMでネストされたスタックの変更セットのプ�
 cover: "icon.jpg"
 ---
 
-## CloudFormationがネストされたスタックのサポートを開始
+AWS SAMにより作成したネストされたスタックを更新する場合に、
+変更セットによるプレビューがどのように表示されるのか検証をしたので、備忘録として残しておく。
+
+## CloudFormationの変更セットがネストされたスタックのサポートを開始
 
 少し前の話だが、
 2020年11月にAWS CloudFormationの変更セットがネストされたスタックを
 サポートするようになった。
 
-[AWS CloudFormation 変更セットがネストされたスタックのサポートを開始](https://aws.amazon.com/jp/about-aws/whats-new/2020/11/aws-cloudformation-change-sets-now-support-nested-stacks/)
+[AWS CloudFormation change sets now support nested stacks](https://aws.amazon.com/jp/about-aws/whats-new/2020/11/aws-cloudformation-change-sets-now-support-nested-stacks/)
 
 ネストされたスタックというのは、他のスタックの一部として作成されたスタックのこと。
 あるスタックのテンプレート内に`AWS::CloudFormation::Stack`リソースを定義することで作成できる。
-
-（以降はネストされたスタックを子スタック、ネストされたスタックを自身の一部として持つスタックを親スタックと呼ぶこととする。）
+ネストされたスタックとそれを自身の一部として持つスタックは子と親の関係となる。
 
 2020年11月以前は親スタックに対して変更セットを作成した場合に、
-子スタックにリースの追加や変更、削除があったとしてもその内容をプレビューすることができなかったのだが、
+子スタックにリソースの追加や変更、削除があったとしてもその内容をプレビューすることができなかったのだが、
 上記のアップデートによりそれが可能となった。
 
+これによりネストされたスタックに重要なリソースが含まれている場合であっても、
+変更による影響範囲を確認した上でその実施可否を判断できる。
 
+## AWS SAMで作成したネストされたスタックでも変更セットを使いたい
+
+AWS SAM（AWS Serverless Application Model）とは
+AWS Lambdaなどを用いたサーバーレスアプリケーションを開発するためのフレームワークである。
+AWS SAMテンプレートというAWS CloudFormationテンプレートを拡張した形式でアプリケーションの構成を記述することができる。
+
+[What is the AWS Serverless Application Model(AWS SAM)?](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html)
+
+AWS SAMでは`AWS::Serverless::Application`リソースを定義することで、ネストされたスタックを作成することができる。
+この場合であってもネストされたスタックで変更セットのプレビューが確認できるか検証したい。
+
+## 検証用のサンプルアプリケーションの準備
+
+検証用のSAMアプリケーションを準備した。詳細は以下のリポジトリの`nested`スタックを参照して頂きたい。
+
+[uu64/aws-cfn-change-set-sample](https://github.com/uu64/aws-cfn-change-set-sample)
+
+以下は親スタックのSAMテンプレート。
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM template using nested stack
+Resources:
+  SAMApp:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: app.yaml
+```
+
+以下は子スタックのSAMテンプレート。
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AWS SAM template with a simple API definition
+Resources:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: hello_world/
+      Events:
+        ApiEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: get
+            RestApiId:
+              Ref: ApiGatewayApi
+      Runtime: python3.7
+      Handler: app.handler
+```
+
+以下はLambda handlerの実装。
+
+```python
+import json
+
+def handler(event, context):
+    return {
+        "statusCode": 200,
+        "body": json.dumps({
+            "message": "hello world",
+        }),
+    }
+```
+
+上記テンプレートを
+[SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)を
+用いてデプロイをする。
+アプリケーションの更新で変更セットを使いたいので、途中聞かれる`Confirm changes before deploy`を「Y」とすること。
+
+```
+# 初回のスタック作成時はguidedオプションを指定する
+$ sam deploy --guided
+$ curl  https://sample.execute-api.ap-northeast-1.amazonaws.com/Stage/
+{"message": "hello world"}
+```
+
+想定通りに動作することを確認できた。
+
+## SAM CLIを使ってアプリケーションを更新したが...
+
+Lambda handlerの返すメッセージを `hello world v2` に変更し、
+`sam deploy`でスタックを変更してみる。
+
+ところが、コマンド実行後にマネジメントコンソールを見たところ、
+親スタックには変更セットが作成されているが、子スタックには変更セットが作成されていない。
+
+どうやらAWS CLIではコマンド実行時に`include-nested-stacks`オプションを指定する必要があるようだが、
+SAM CLIでは上記オプションがまだ実装されていないようである。
+
+[Working with change sets for nested stack(AWS CLI)](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/change-sets-for-nested-stacks.html#change-sets-for-nested-stacks-cli)
+
+[Support for nested stack cahngeset #2406](https://github.com/aws/aws-sam-cli/issues/2406)
+
+## AWS CLIでアプリケーションの更新を試す
+
+SAM CLIではまだサポートされていないことがわかったが、
+AWS CLIでは利用できるはずなので試してみた。
+
+AWS CLIの場合は、以下の2コマンドを実行することで
+SAMアプリケーションを更新することができる。
+
+```sh
+$ aws cloudformation package \
+    --template-file ./template.yaml \
+    --output-template-file ./packaged.yaml \
+    --s3-bucket <パッケージを格納するS3バケット名>
+$ aws cloudformation create-change-set \
+    --stack-name nested-app \
+    --change-set-name update \
+    --include-nested-stacks \
+    --template-body file://packaged.yaml \
+    --capabilities CAPABILITY_IAM
+```
+
+今度は変更セットで変更のプレビューが確認できた。
+
+![changeset](/2021/05/changeset.png "作成された変更セットのプレビュー")
+
+## まとめ
+
+SAMを用いて作成したアプリケーションでは、
+AWS CLIを用いることで変更セットのプレビューを確認できる。
+
+（SAMはCloudFormationとほぼ同等なので、想定通りであった）
+
+SAM CLIでの対応が待たれる。
