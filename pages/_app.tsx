@@ -8,9 +8,9 @@ import "./tailwind.css";
 const MyApp: React.FC<AppProps> = ({ Component, pageProps }: AppProps) => {
   return (
     <>
-      <OGlobalHeader />
       <div className="app-main">
-        <div className="mx-auto max-w-screen-md py-8">
+        <div className="mx-auto max-w-screen-md">
+          <OGlobalHeader />
           <Component {...pageProps} />
         </div>
       </div>

@@ -5,7 +5,7 @@ import MMenu from "@/components/molecules/MMenu";
 const OGlobalHeader: React.FC = () => {
   return (
     <nav>
-      <div className="max-w-screen-md px-8 py-4 flex items-end mx-auto">
+      <div className="px-8 pt-4 pb-12 flex items-end mx-auto">
         <div className="flex-grow">
           <ALogo />
         </div>
