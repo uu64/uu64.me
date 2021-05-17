@@ -1,0 +1,15 @@
+---
+title: "CloudFrontの後ろにAPI Gatewayを置こうとしてハマった話"
+date: "2021-05-17"
+description: "CloudFront Distributionの後ろにAPI Gatewayを配置したときに403エラーが発生してハマったので、解決策を備忘録として残す。"
+cover: "/icon.jpg"
+---
+
+CloudFront Distributionの後ろにAPI Gatewayを配置したときに403エラーが発生してハマったので、解決策を備忘録として残す。
+
+## やろうとしたこと
+
+API Gateway + Lambdaの構成のAPI群と、S3にホスティングした静的コンテンツを同じドメインで配信したい。
+具体的には以下のページのような構成でサービスの構築を試みた。
+
+[Nuxt.js(SSR)をLambdaで配信する【個人開発】](https://qiita.com/kobayashi-m42/items/fbacb46f7603e5a014d7)
