@@ -13,3 +13,206 @@ API Gateway + Lambdaの構成のAPI群と、S3にホスティングした静的�
 具体的には以下のページのような構成でサービスの構築を試みた。
 
 [Nuxt.js(SSR)をLambdaで配信する【個人開発】](https://qiita.com/kobayashi-m42/items/fbacb46f7603e5a014d7)
+
+検証に用いたCloudFormationテンプレートは以下の通り。
+
+```yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sample-app
+
+  Sample SAM Template for sample-app
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  SampleApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: hello-world/
+      Handler: app.lambdaHandler
+      Runtime: nodejs14.x
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /hello
+            Method: get
+            RestApiId: !Ref SampleApi
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        CacheBehaviors:
+          - AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+              - PUT
+              - PATCH
+              - POST
+              - DELETE
+            PathPattern: "*"
+            TargetOriginId: sample-app
+            Compress: False
+            ViewerProtocolPolicy: https-only
+            CachePolicyId: !Ref CachePolicy
+            OriginRequestPolicyId: !Ref OriginRequestPolicy
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - PATCH
+            - POST
+            - DELETE
+          TargetOriginId: sample-app
+          Compress: False
+          ViewerProtocolPolicy: https-only
+          CachePolicyId: !Ref CachePolicy
+          OriginRequestPolicyId: !Ref OriginRequestPolicy
+        Enabled: True
+        Origins:
+          - DomainName: !Sub "${SampleApi}.execute-api.${AWS::Region}.amazonaws.com"
+            Id: sample-app
+            CustomOriginConfig:
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+
+  CachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        DefaultTTL: 0
+        MaxTTL: 0
+        MinTTL: 0
+        Name: sample-cache-policy
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingGzip: False
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  OriginRequestPolicy:
+    Type: AWS::CloudFront::OriginRequestPolicy
+    Properties:
+      OriginRequestPolicyConfig:
+        Name: sample-origin-request-policy
+        CookiesConfig:
+          CookieBehavior: all
+        HeadersConfig:
+          HeaderBehavior: allViewer
+        QueryStringsConfig:
+          QueryStringBehavior: all
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${SampleApi}.execute-api.${AWS::Region}.amazonaws.com/prod/hello/"
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt HelloWorldFunctionRole.Arn
+  CloudFrontDistributionDomain:
+    Value: !GetAtt CloudFrontDistribution.DomainName
+```
+
+## 403エラーに遭遇する
+
+上記のスタックにリクエストを投げてみると以下のように403エラーが発生した。
+
+```
+$  curl -v https://XXX.cloudfront.net/prod/hello
+*   Trying 99.84.55.7...
+* TCP_NODELAY set
+* Connected to XXX.cloudfront.net (99.84.55.7) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/cert.pem
+  CApath: none
+* TLSv1.2 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: CN=*.cloudfront.net
+*  start date: Feb 22 00:00:00 2021 GMT
+*  expire date: Feb 21 23:59:59 2022 GMT
+*  subjectAltName: host "XXX.cloudfront.net" matched cert's "*.cloudfront.net"
+*  issuer: C=US; O=DigiCert Inc; CN=DigiCert Global CA G2
+*  SSL certificate verify ok.
+> GET /prod/hello HTTP/1.1
+> Host: XXX.cloudfront.net
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 403 Forbidden
+< Content-Type: text/html
+< Content-Length: 915
+< Connection: keep-alive
+< Server: CloudFront
+< Date: Tue, 18 May 2021 14:26:54 GMT
+< Via: 1.1 AAA.cloudfront.net (CloudFront), 1.1 BBB.cloudfront.net (CloudFront), 1.1 CCC.cloudfront.net (CloudFront)
+< X-Amz-Cf-Pop: NRT20-C4
+< X-Amz-Cf-Pop: NRT20-C4
+< X-Cache: Error from cloudfront
+< X-Amz-Cf-Pop: NRT20-C3
+< X-Amz-Cf-Id: XP7_WUUTJr22Dhk_jvtJdm6AS7K18DNGgGJRADOSJ32Ru4AcS7ZJzA==
+<
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<HTML><HEAD><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<TITLE>ERROR: The request could not be satisfied</TITLE>
+</HEAD><BODY>
+<H1>403 ERROR</H1>
+<H2>The request could not be satisfied.</H2>
+<HR noshade size="1px">
+Bad request.
+We can't connect to the server for this app or website at this time. There might be too much traffic or a configuration error. Try again later, or contact the app or website owner.
+<BR clear="all">
+If you provide content to customers through CloudFront, you can find steps to troubleshoot and help prevent this error by reviewing the CloudFront documentation.
+<BR clear="all">
+<HR noshade size="1px">
+<PRE>
+Generated by cloudfront (CloudFront)
+Request ID: Ph-qtdiH8taNiVk96gVvdJ6ovI3MTB9Aw3X2NX3YEmO_VOEc4ZukvQ==
+</PRE>
+<ADDRESS>
+</ADDRESS>
+* Connection #0 to host XXX.cloudfront.net left intact
+</BODY></HTML>* Closing connection 0
+```
+
+どうやらエラーメッセージはCloudFrontが返しているらしい。
+またViaヘッダを見ると複数のCloudFrontを経由しているようである。
+
+## 対処方法
+
+
