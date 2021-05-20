@@ -213,6 +213,81 @@ Request ID: Ph-qtdiH8taNiVk96gVvdJ6ovI3MTB9Aw3X2NX3YEmO_VOEc4ZukvQ==
 どうやらエラーメッセージはCloudFrontが返しているらしい。
 またViaヘッダを見ると複数のCloudFrontを経由しているようである。
 
-## 対処方法
+## 原因
 
+`CachePolicy`と`OriginRequestPolicy`を見直しながら検証を繰り返した結果、
+リクエストの送信先であるCloudFrontやAPI Gatewayのホスト名と、
+リクエストのHostヘッダの値が一致しない場合に上記のような403エラーが返されることがわかった。
 
+例えば、上記テンプレートを以下のように修正してみる。
+
+```
+diff --git a/sample-app/template.yaml b/sample-app/template.yaml
+index f5ee427..86f1cc0 100644
+--- a/sample-app/template.yaml
++++ b/sample-app/template.yaml
+@@ -96,7 +96,9 @@ Resources:
+         CookiesConfig:
+           CookieBehavior: all
+         HeadersConfig:
+-          HeaderBehavior: allViewer
++          HeaderBehavior: whitelist
++          Headers:
++            - User-Agent
+         QueryStringsConfig:
+           QueryStringBehavior: all
+```
+
+上記をスタックに反映後、再びリクエストを送信すると、以下の通り想定通りのレスポンスが得られた。
+
+```
+curl -v https://XXX.cloudfront.net/prod/hello
+*   Trying 13.33.174.31...
+* TCP_NODELAY set
+* Connected to XXX.cloudfront.net (13.33.174.31) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*   CAfile: /etc/ssl/cert.pem
+  CApath: none
+* TLSv1.2 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS handshake, Certificate (11):
+* TLSv1.2 (IN), TLS handshake, Server key exchange (12):
+* TLSv1.2 (IN), TLS handshake, Server finished (14):
+* TLSv1.2 (OUT), TLS handshake, Client key exchange (16):
+* TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (OUT), TLS handshake, Finished (20):
+* TLSv1.2 (IN), TLS change cipher, Change cipher spec (1):
+* TLSv1.2 (IN), TLS handshake, Finished (20):
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES128-GCM-SHA256
+* ALPN, server did not agree to a protocol
+* Server certificate:
+*  subject: CN=*.cloudfront.net
+*  start date: Feb 22 00:00:00 2021 GMT
+*  expire date: Feb 21 23:59:59 2022 GMT
+*  subjectAltName: host "XXX.cloudfront.net" matched cert's "*.cloudfront.net"
+*  issuer: C=US; O=DigiCert Inc; CN=DigiCert Global CA G2
+*  SSL certificate verify ok.
+> GET /prod/hello HTTP/1.1
+> Host: XXX.cloudfront.net
+> User-Agent: curl/7.64.1
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< Content-Length: 25
+< Connection: keep-alive
+< Date: Thu, 20 May 2021 14:54:24 GMT
+< x-amzn-RequestId: 535efa05-8721-4b31-9cb6-4462319e1968
+< x-amz-apigw-id: foe1CFestjMFrog=
+< X-Amzn-Trace-Id: Root=1-60a67820-3364ff23560535966294cea3;Sampled=0
+< Via: 1.1 0ad301ca10327c098ca0386f844a3652.cloudfront.net (CloudFront), 1.1 62c43884c965f87176688b6ced39f190.cloudfront.net (CloudFront)
+< X-Amz-Cf-Pop: NRT12-C3
+< X-Cache: Miss from cloudfront
+< X-Amz-Cf-Pop: NRT57-C2
+< X-Amz-Cf-Id: do1N7GEMDepsQcyoLcx1NyYolJ-aPPb5MfL-rC_nyI19Mu4BQ0eshA==
+<
+* Connection #0 to host XXX.cloudfront.net left intact
+{"message":"hello world"}* Closing connection 0
+```
