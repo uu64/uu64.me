@@ -1,8 +1,117 @@
 ---
-title: "VIMの起動時間を改善した"
+title: "VIMの起動時間の調査方法"
 date: "2021-06-17"
-description: "VIMの起動時間を約1秒改善することに成功した。起動時間のプロファイリング方法などの調査方法について備忘録として残す。"
+description: "最近 VIM の起動時間が遅いことが気になり、高速化のために起動時間の内訳を調査した。いくつかの調査方法を試したため、備忘録として残す。"
 cover: "/2021/06/vim.png"
 ---
 
-VIMの起動時間を約1秒改善することに成功した。起動時間のプロファイリング方法などの調査方法について備忘録として残す。
+最近 VIM の起動時間が遅いことが気になり、高速化のために起動時間の内訳を調査した。
+
+歴戦の Vimmer の皆様には常識かもしれないが、私のような初学者の助けになればと思い調査方法を備忘録として残す。
+
+## `--startuptime` オプション
+
+vim/neovim には `--startuptime` という起動時間の内訳を調査するための
+オプションが用意されている。
+
+以下のようにして用いる。オプションの後ろに指定したファイルパスに、起動ログが出力される。
+
+```sh
+$ vim --startuptime /tmp/startup.log
+```
+
+出力内容は以下のようになっている。
+
+```txt
+
+
+times in msec
+ clock   self+sourced   self:  sourced script
+ clock   elapsed:              other lines
+
+000.025  000.025: --- NVIM STARTING ---
+001.207  001.182: locale set
+001.810  000.603: inits 1
+001.839  000.029: window checked
+001.844  000.006: parsing arguments
+002.439  000.595: expanding arguments
+002.535  000.096: inits 2
+003.307  000.773: init highlight
+003.740  000.433: waiting for UI
+006.699  002.959: done waiting for UI
+006.719  000.020: initialized screen early for UI
+007.986  000.208  000.208: sourcing /Users/uu64/.cache/dein/repos/github.com/Shougo/dein.vim/autoload/dein.vim
+... (略) ...
+173.896  011.614: BufEnter autocommands
+173.901  000.005: editing files in windows
+176.619  002.718: VimEnter autocommands
+176.622  000.003: UIEnter autocommands
+176.627  000.004: before starting main loop
+177.755  000.913  000.913: sourcing /Users/uu64/.cache/dein/.cache/init.vim/.dein/autoload/coc/float.vim
+192.598  015.059: first screen update
+192.602  000.004: --- NVIM STARTED ---
+```
+
+
+## vim-startuptime 
+
+vim/nvim の `--startuptime` オプションをリッチにした Go 製の CLI ツール。
+ユーザーの指定した回数 vim/nvim の起動を試行し、
+プラグイン毎の平均ロード時間など、いくつかの指標を集計してくれる。
+
+インストール方法などの詳細は、以下のページを参照してほしい。
+
+[https://github.com/rhysd/vim-startuptime](https://github.com/rhysd/vim-startuptime)
+
+出力内容は以下のようになっている。時間のかかっている項目順にソートしてくれるのが嬉しい。
+
+```sh
+$ vim-startuptime
+Extra options: []
+Measured: 10 times
+
+Total Average: 82.443300 msec
+Total Max:     86.238000 msec
+Total Min:     80.171000 msec
+
+  AVERAGE       MAX       MIN
+------------------------------
+21.768500 22.866000 21.020000: $HOME/.vimrc
+17.086700 18.335000 16.411000: /usr/share/vim/vim81/syntax/syntax.vim
+ 8.953000  9.791000  8.372000: /Users/uu64/.cache/dein/.cache/.vimrc/.dein/plugin/NERD_tree.vim
+ 7.509400  8.080000  7.060000: BufEnter autocommands
+ 6.121000  7.860000  5.534000: /Users/uu64/.cache/dein/.cache/.vimrc/.dein/autoload/fugitive.vim
+ 5.948100  7.013000  5.586000: /Users/uu64/.cache/dein/.cache/.vimrc/.dein/plugin/coc.vim
+... (略) ...
+```
+
+
+## `autocmd` コマンド
+
+autocmd とは vim/nvim で特定のイベントが発生した際に、自動実行するコマンド (autocomannds) を指定する機能である。
+
+上記で紹介した調査ツールにより、特定の autocommands に時間がかかっていると分かった場合は、 vim/nvim のコマンドラインから `autocmd` コマンドを実行することで
+
+```
+:autocmd BufEnter
+--- Autocommands ---
+polyglot-sleuth  BufEnter
+    *         call s:detect_indent()
+filetypedetect  BufEnter
+    *.xpm     if getline(1) =~ "XPM2" |   setf xpm2 | else |   setf xpm | endif
+NERDTree  BufEnter
+    NERD_tree_*
+              stopinsert
+NERDTreeHijackNetrw  BufEnter
+    *         call nerdtree#checkForBrowse(expand('<amatch>'))
+ALEEvents  BufEnter
+    *         call ale#events#ReadOrEnterEvent(str2nr(expand('<abuf>')))
+BufEnter
+    *         :call AutoPairsTryInit()
+coc_nvim  BufEnter
+    *         call s:Autocmd('BufEnter', +expand('<abuf>'))
+... (略) ...
+```
+
+
+
