@@ -9,13 +9,10 @@ const MProfile: React.FC = () => {
       </div>
       <h2 className="text-center font-bold pb-4">uu</h2>
       <p>
-        某メーカーのソフトウェアエンジニア。
-        <br />
-        最近の仕事では AWS CloudFormation を活用した IaC や CI/CD
-        パイプラインの実装を担当することが多い。
+        データエンジニアをやっています。データ基盤の管理やデータ活用に関するアプリケーション開発をやってます。
         <br />
         <br />
-        主な技術スタック： JavaScript, Java, Amazon Web Services, Git, Linux
+        主な技術スタック： JavaScript, TypeScript, React, Golang, Amazon Web Services, Google Cloud Platform, Git, Linux
       </p>
     </>
   );
