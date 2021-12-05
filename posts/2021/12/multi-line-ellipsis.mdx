@@ -1,0 +1,67 @@
+---
+title: "複数行のテキストの末尾を\"...\"で省略するためのCSS指定方法"
+date: "2021-12-05"
+description: ""
+cover: "/2021/12/screenshot.png"
+---
+
+## やりたいこと
+
+以下のような長文のテキストの先頭N行のみを表示し、それ以降は表示しない。
+文章の末尾には省略表示であることを示す "..." を表示する。
+
+```html
+<p class="paragraph-1">
+  <span class="red">Lorem ipsum</span> dolor sit amet, consectetur 
+  adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore 
+  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
+  laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor 
+  in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+  pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa 
+  qui officia deserunt mollit anim id est laborum.
+</p>
+```
+
+
+## 結論
+
+CSS の [webkit-line-clamp](https://developer.mozilla.org/ja/docs/Web/CSS/-webkit-line-clamp) プロパティを使えばよい。
+
+- [サンプルコード (codepen)](https://codepen.io/uu64/pen/eYGpXXa)
+
+display プロパティに -webkit-box もしくは -webkit-inline-box が設定されていて、
+かつ box-orient プロパティに vertical が設定されている組み合わせのときのみ動作する。
+いずれかの指定がもれているとスタイルは反映されない。
+
+以下は３行目末尾まで表示する場合の設定例。
+
+```css
+.paragraph-2 {
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
+}
+```
+
+注意点として、`-webkit-line-clamp` は指定行数の末尾に "..." を追加するだけであり、
+以降の行の文字列を削除してくれるわけではない。
+
+そのため `overflow: hidden` などを設定して、"..." 以降の文字列が画面上に表示されないようにする必要がある。
+
+
+## `text-overflow: ellipsis` じゃダメなの？
+
+`text-overflow: ellipsis` は複数行対応しておらず、１行目しか表示されない。
+
+今回実現したかったのは、「先頭数行のみ表示、以降は非表示」だったので、`text-overflow: ellipsis` は要件に合わなかった（ダメだった）。
+
+
+## 感想
+
+最初 `text-overflow: ellipsis` で実装しようとして全然うまく行かなくて困っていたところ、
+以下の stackoverflow に助けられた。
+
+- https://stackoverflow.com/questions/33058004/applying-an-ellipsis-to-multiline-text
+
+常識的な内容かもしれないけど、同じように困る人いる気もするので、誰かの参考になると嬉しい。
