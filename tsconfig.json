@@ -22,11 +22,12 @@
       "@/*": [
         "./*"
       ]
-    }
+    },
+    "incremental": true
   },
   "exclude": [
     "node_modules",
-    ".next",
+    ".next"
   ],
   "include": [
     "**/*.d.ts",
