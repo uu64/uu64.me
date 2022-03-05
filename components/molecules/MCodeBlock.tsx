@@ -28,7 +28,7 @@ const MCodeBlock: React.FC<Props> = ({ children, className }: Props) => {
             <div key={i} {...getLineProps({ line, key: i })}>
               {line.map((token, key) => {
                 if (token.empty !== true) {
-                  return <span key={key} {...getTokenProps({ token, key })} />
+                  return <span key={key} {...getTokenProps({ token, key })} />;
                 }
               })}
             </div>

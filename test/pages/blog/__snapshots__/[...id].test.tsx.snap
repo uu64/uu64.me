@@ -183,19 +183,7 @@ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               "color": "#bfc7d5",
             }
           }
-        >
-          <span
-            className="token plain"
-            style={
-              Object {
-                "display": "inline-block",
-              }
-            }
-          >
-            
-
-          </span>
-        </div>
+        />
         <div
           className="token-line"
           style={
@@ -249,19 +237,7 @@ non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               "color": "#bfc7d5",
             }
           }
-        >
-          <span
-            className="token plain"
-            style={
-              Object {
-                "display": "inline-block",
-              }
-            }
-          >
-            
-
-          </span>
-        </div>
+        />
       </pre>
     </pre>
   </div>
